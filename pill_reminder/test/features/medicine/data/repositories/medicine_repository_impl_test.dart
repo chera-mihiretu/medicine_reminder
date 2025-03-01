@@ -6,8 +6,8 @@ import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart'
 import 'package:pill_reminder/features/medicine/data/repositories/medicine_repository_impl.dart';
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
 
-import '../../../mock/mock_generator.mocks.dart';
-import '../../../test_data/medicine_test_data.dart';
+import '../../../../mock/mock_generator.mocks.dart';
+import '../../../../test_data/medicine_test_data.dart';
 
 void main() {
   late MockMedicineLocalDataSource mockMedicineLocalDataSource;

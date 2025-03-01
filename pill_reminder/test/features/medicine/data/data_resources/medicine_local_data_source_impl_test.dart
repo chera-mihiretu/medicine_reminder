@@ -4,8 +4,8 @@ import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
 import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
 
-import '../../../mock/mock_generator.mocks.dart';
-import '../../../test_data/medicine_test_data.dart';
+import '../../../../mock/mock_generator.mocks.dart';
+import '../../../../test_data/medicine_test_data.dart';
 
 void main() {
   late MockBox<MedicineModel> mockBox;

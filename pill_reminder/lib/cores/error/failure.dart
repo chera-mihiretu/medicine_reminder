@@ -17,3 +17,10 @@ class CacheFailure extends Failure {
     required this.message,
   }) : super(message);
 }
+
+class PermissionFailure extends Failure {
+  @override
+  // ignore: overridden_fields
+  final String message;
+  const PermissionFailure({required this.message}) : super(message);
+}

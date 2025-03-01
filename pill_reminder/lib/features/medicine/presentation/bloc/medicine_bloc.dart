@@ -1,18 +1,30 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
-import 'package:pill_reminder/features/medicine/domain/usecases/medicine_usecase.dart';
+import 'package:pill_reminder/features/medicine/domain/usecases/add_medicine_usecase.dart';
+import 'package:pill_reminder/features/medicine/domain/usecases/delete_medicine_usecase.dart';
+import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart';
+import 'package:pill_reminder/features/medicine/domain/usecases/get_madicine_usecase.dart';
+import 'package:pill_reminder/features/medicine/domain/usecases/update_medicine_usecase.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_event.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_state.dart';
 
 class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
-  final MedicineUsecase medicineUsecase;
-
-  MedicineBloc({required this.medicineUsecase})
-      : super(MedicineInitialState()) {
+  final GetAllMedicineUsecase getAllMedicineUsecase;
+  final GetMadicineUsecase getMadicineUsecase;
+  final AddMedicineUsecase addMedicineUseCase;
+  final DeleteMedicineUsecase deleteMedicineUsecase;
+  final UpdateMedicineUsecase updateMedicineUsecase;
+  MedicineBloc({
+    required this.getAllMedicineUsecase,
+    required this.getMadicineUsecase,
+    required this.addMedicineUseCase,
+    required this.deleteMedicineUsecase,
+    required this.updateMedicineUsecase,
+  }) : super(MedicineInitialState()) {
     on<GetMedicineListEvent>((event, emit) async {
       emit(MedicineLoadingState());
 
-      final result = await medicineUsecase.getMedicineList();
+      final result = await getAllMedicineUsecase.execute();
 
       result.fold(
         (failure) => emit(MedicineErrorState(failure.message)),
@@ -25,8 +37,26 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         },
       );
     });
+
+    on<GetMedicineEvent>((event, emit) async {
+      emit(MedicineLoadingState());
+      final result = await getMadicineUsecase.execute(event.medicineId);
+
+      result.fold(
+        (failure) => emit(MedicineErrorState(failure.message)),
+        (medicine) {
+          emit(MedicineLoadedState({medicine.medicineId: medicine}));
+        },
+      );
+    });
+
     on<AddMedicineEvent>((event, emit) async {
-      final loadedState = state as MedicineLoadedState;
+      final MedicineLoadedState loadedState;
+      if (state is MedicineLoadedState) {
+        loadedState = state as MedicineLoadedState;
+      } else {
+        loadedState = const MedicineLoadedState({});
+      }
       emit(MedicineLoadingState());
 
       final medicine = MedicineEntity(
@@ -37,7 +67,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         startDate: event.startDate,
       );
 
-      final result = await medicineUsecase.addMedicine(medicine);
+      final result = await addMedicineUseCase.execute(medicine);
 
       result.fold((failure) => emit(MedicineErrorState(failure.message)),
           (status) {
@@ -46,7 +76,12 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       });
     });
     on<UpdataeMedicineEvent>((event, emit) async {
-      final loadedState = state as MedicineLoadedState;
+      final MedicineLoadedState loadedState;
+      if (state is MedicineLoadedState) {
+        loadedState = state as MedicineLoadedState;
+      } else {
+        loadedState = const MedicineLoadedState({});
+      }
 
       emit(MedicineLoadingState());
 
@@ -58,7 +93,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         startDate: event.startDate,
       );
 
-      final result = await medicineUsecase.updateMedicine(medicine);
+      final result = await updateMedicineUsecase.execute(medicine);
 
       result.fold(
         (failure) => emit(MedicineErrorState(failure.message)),
@@ -69,10 +104,15 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       );
     });
     on<DeleteMedicineEvent>((event, emit) async {
-      final loadedState = state as MedicineLoadedState;
+      final MedicineLoadedState loadedState;
+      if (state is MedicineLoadedState) {
+        loadedState = state as MedicineLoadedState;
+      } else {
+        loadedState = const MedicineLoadedState({});
+      }
       emit(MedicineLoadingState());
 
-      final result = await medicineUsecase.deleteMedicine(event.medicineId);
+      final result = await deleteMedicineUsecase.execute(event.medicineId);
 
       result.fold(
         (failure) => emit(MedicineErrorState(failure.message)),
