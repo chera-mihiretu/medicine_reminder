@@ -3,35 +3,43 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i6;
 
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:flutter_local_notifications/src/flutter_local_notifications_plugin.dart'
-    as _i11;
-import 'package:flutter_local_notifications/src/initialization_settings.dart'
     as _i12;
-import 'package:flutter_local_notifications/src/notification_details.dart'
-    as _i14;
-import 'package:flutter_local_notifications/src/platform_specifics/android/schedule_mode.dart'
-    as _i17;
-import 'package:flutter_local_notifications/src/platform_specifics/ios/enums.dart'
-    as _i16;
-import 'package:flutter_local_notifications/src/types.dart' as _i18;
-import 'package:flutter_local_notifications_platform_interface/flutter_local_notifications_platform_interface.dart'
+import 'package:flutter_local_notifications/src/initialization_settings.dart'
     as _i13;
-import 'package:hive/hive.dart' as _i8;
+import 'package:flutter_local_notifications/src/notification_details.dart'
+    as _i15;
+import 'package:flutter_local_notifications/src/platform_specifics/android/schedule_mode.dart'
+    as _i18;
+import 'package:flutter_local_notifications/src/platform_specifics/ios/enums.dart'
+    as _i17;
+import 'package:flutter_local_notifications/src/types.dart' as _i19;
+import 'package:flutter_local_notifications_platform_interface/flutter_local_notifications_platform_interface.dart'
+    as _i14;
+import 'package:hive/hive.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i9;
-import 'package:pill_reminder/cores/error/failure.dart' as _i6;
+import 'package:mockito/src/dummies.dart' as _i10;
+import 'package:pill_reminder/cores/error/failure.dart' as _i7;
 import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart'
-    as _i10;
+    as _i11;
 import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart'
     as _i3;
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart'
-    as _i7;
+    as _i8;
 import 'package:pill_reminder/features/medicine/domain/repositories/medicine_repository.dart'
+    as _i5;
+import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart'
+    as _i21;
+import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart'
     as _i4;
-import 'package:timezone/timezone.dart' as _i15;
+import 'package:pill_reminder/features/notification/domain/usecases/show_full_screen_notification_usecase.dart'
+    as _i22;
+import 'package:pill_reminder/features/notification/domain/usecases/show_notification_usecase.dart'
+    as _i20;
+import 'package:timezone/timezone.dart' as _i16;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -67,35 +75,46 @@ class _FakeMedicineModel_1 extends _i1.SmartFake implements _i3.MedicineModel {
         );
 }
 
+class _FakeNotificationRepository_2 extends _i1.SmartFake
+    implements _i4.NotificationRepository {
+  _FakeNotificationRepository_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [MedicineRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMedicineRepository extends _i1.Mock
-    implements _i4.MedicineRepository {
+    implements _i5.MedicineRepository {
   MockMedicineRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<_i2.Either<_i6.Failure, List<_i7.MedicineEntity>>>
+  _i6.Future<_i2.Either<_i7.Failure, List<_i8.MedicineEntity>>>
       getMedicines() => (super.noSuchMethod(
             Invocation.method(
               #getMedicines,
               [],
             ),
-            returnValue: _i5.Future<
-                    _i2.Either<_i6.Failure, List<_i7.MedicineEntity>>>.value(
-                _FakeEither_0<_i6.Failure, List<_i7.MedicineEntity>>(
+            returnValue: _i6.Future<
+                    _i2.Either<_i7.Failure, List<_i8.MedicineEntity>>>.value(
+                _FakeEither_0<_i7.Failure, List<_i8.MedicineEntity>>(
               this,
               Invocation.method(
                 #getMedicines,
                 [],
               ),
             )),
-          ) as _i5.Future<_i2.Either<_i6.Failure, List<_i7.MedicineEntity>>>);
+          ) as _i6.Future<_i2.Either<_i7.Failure, List<_i8.MedicineEntity>>>);
 
   @override
-  _i5.Future<_i2.Either<_i6.Failure, _i7.MedicineEntity>> getMedicine(
+  _i6.Future<_i2.Either<_i7.Failure, _i8.MedicineEntity>> getMedicine(
           String? id) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -103,74 +122,74 @@ class MockMedicineRepository extends _i1.Mock
           [id],
         ),
         returnValue:
-            _i5.Future<_i2.Either<_i6.Failure, _i7.MedicineEntity>>.value(
-                _FakeEither_0<_i6.Failure, _i7.MedicineEntity>(
+            _i6.Future<_i2.Either<_i7.Failure, _i8.MedicineEntity>>.value(
+                _FakeEither_0<_i7.Failure, _i8.MedicineEntity>(
           this,
           Invocation.method(
             #getMedicine,
             [id],
           ),
         )),
-      ) as _i5.Future<_i2.Either<_i6.Failure, _i7.MedicineEntity>>);
+      ) as _i6.Future<_i2.Either<_i7.Failure, _i8.MedicineEntity>>);
 
   @override
-  _i5.Future<_i2.Either<_i6.Failure, bool>> addMedicine(
-          _i7.MedicineEntity? medicine) =>
+  _i6.Future<_i2.Either<_i7.Failure, bool>> addMedicine(
+          _i8.MedicineEntity? medicine) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMedicine,
           [medicine],
         ),
-        returnValue: _i5.Future<_i2.Either<_i6.Failure, bool>>.value(
-            _FakeEither_0<_i6.Failure, bool>(
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, bool>>.value(
+            _FakeEither_0<_i7.Failure, bool>(
           this,
           Invocation.method(
             #addMedicine,
             [medicine],
           ),
         )),
-      ) as _i5.Future<_i2.Either<_i6.Failure, bool>>);
+      ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
 
   @override
-  _i5.Future<_i2.Either<_i6.Failure, bool>> updateMedicine(
-          _i7.MedicineEntity? medicine) =>
+  _i6.Future<_i2.Either<_i7.Failure, bool>> updateMedicine(
+          _i8.MedicineEntity? medicine) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateMedicine,
           [medicine],
         ),
-        returnValue: _i5.Future<_i2.Either<_i6.Failure, bool>>.value(
-            _FakeEither_0<_i6.Failure, bool>(
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, bool>>.value(
+            _FakeEither_0<_i7.Failure, bool>(
           this,
           Invocation.method(
             #updateMedicine,
             [medicine],
           ),
         )),
-      ) as _i5.Future<_i2.Either<_i6.Failure, bool>>);
+      ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
 
   @override
-  _i5.Future<_i2.Either<_i6.Failure, bool>> deleteMedicine(String? id) =>
+  _i6.Future<_i2.Either<_i7.Failure, bool>> deleteMedicine(String? id) =>
       (super.noSuchMethod(
         Invocation.method(
           #deleteMedicine,
           [id],
         ),
-        returnValue: _i5.Future<_i2.Either<_i6.Failure, bool>>.value(
-            _FakeEither_0<_i6.Failure, bool>(
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, bool>>.value(
+            _FakeEither_0<_i7.Failure, bool>(
           this,
           Invocation.method(
             #deleteMedicine,
             [id],
           ),
         )),
-      ) as _i5.Future<_i2.Either<_i6.Failure, bool>>);
+      ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
 }
 
 /// A class which mocks [Box].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBox<E> extends _i1.Mock implements _i8.Box<E> {
+class MockBox<E> extends _i1.Mock implements _i9.Box<E> {
   MockBox() {
     _i1.throwOnMissingStub(this);
   }
@@ -184,7 +203,7 @@ class MockBox<E> extends _i1.Mock implements _i8.Box<E> {
   @override
   String get name => (super.noSuchMethod(
         Invocation.getter(#name),
-        returnValue: _i9.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#name),
         ),
@@ -265,14 +284,14 @@ class MockBox<E> extends _i1.Mock implements _i8.Box<E> {
       ));
 
   @override
-  _i5.Stream<_i8.BoxEvent> watch({dynamic key}) => (super.noSuchMethod(
+  _i6.Stream<_i9.BoxEvent> watch({dynamic key}) => (super.noSuchMethod(
         Invocation.method(
           #watch,
           [],
           {#key: key},
         ),
-        returnValue: _i5.Stream<_i8.BoxEvent>.empty(),
-      ) as _i5.Stream<_i8.BoxEvent>);
+        returnValue: _i6.Stream<_i9.BoxEvent>.empty(),
+      ) as _i6.Stream<_i9.BoxEvent>);
 
   @override
   bool containsKey(dynamic key) => (super.noSuchMethod(
@@ -284,7 +303,7 @@ class MockBox<E> extends _i1.Mock implements _i8.Box<E> {
       ) as bool);
 
   @override
-  _i5.Future<void> put(
+  _i6.Future<void> put(
     dynamic key,
     E? value,
   ) =>
@@ -296,12 +315,12 @@ class MockBox<E> extends _i1.Mock implements _i8.Box<E> {
             value,
           ],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> putAt(
+  _i6.Future<void> putAt(
     int? index,
     E? value,
   ) =>
@@ -313,197 +332,197 @@ class MockBox<E> extends _i1.Mock implements _i8.Box<E> {
             value,
           ],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> putAll(Map<dynamic, E>? entries) => (super.noSuchMethod(
+  _i6.Future<void> putAll(Map<dynamic, E>? entries) => (super.noSuchMethod(
         Invocation.method(
           #putAll,
           [entries],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<int> add(E? value) => (super.noSuchMethod(
+  _i6.Future<int> add(E? value) => (super.noSuchMethod(
         Invocation.method(
           #add,
           [value],
         ),
-        returnValue: _i5.Future<int>.value(0),
-      ) as _i5.Future<int>);
+        returnValue: _i6.Future<int>.value(0),
+      ) as _i6.Future<int>);
 
   @override
-  _i5.Future<Iterable<int>> addAll(Iterable<E>? values) => (super.noSuchMethod(
+  _i6.Future<Iterable<int>> addAll(Iterable<E>? values) => (super.noSuchMethod(
         Invocation.method(
           #addAll,
           [values],
         ),
-        returnValue: _i5.Future<Iterable<int>>.value(<int>[]),
-      ) as _i5.Future<Iterable<int>>);
+        returnValue: _i6.Future<Iterable<int>>.value(<int>[]),
+      ) as _i6.Future<Iterable<int>>);
 
   @override
-  _i5.Future<void> delete(dynamic key) => (super.noSuchMethod(
+  _i6.Future<void> delete(dynamic key) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [key],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> deleteAt(int? index) => (super.noSuchMethod(
+  _i6.Future<void> deleteAt(int? index) => (super.noSuchMethod(
         Invocation.method(
           #deleteAt,
           [index],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> deleteAll(Iterable<dynamic>? keys) => (super.noSuchMethod(
+  _i6.Future<void> deleteAll(Iterable<dynamic>? keys) => (super.noSuchMethod(
         Invocation.method(
           #deleteAll,
           [keys],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> compact() => (super.noSuchMethod(
+  _i6.Future<void> compact() => (super.noSuchMethod(
         Invocation.method(
           #compact,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<int> clear() => (super.noSuchMethod(
+  _i6.Future<int> clear() => (super.noSuchMethod(
         Invocation.method(
           #clear,
           [],
         ),
-        returnValue: _i5.Future<int>.value(0),
-      ) as _i5.Future<int>);
+        returnValue: _i6.Future<int>.value(0),
+      ) as _i6.Future<int>);
 
   @override
-  _i5.Future<void> close() => (super.noSuchMethod(
+  _i6.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
           #close,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> deleteFromDisk() => (super.noSuchMethod(
+  _i6.Future<void> deleteFromDisk() => (super.noSuchMethod(
         Invocation.method(
           #deleteFromDisk,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> flush() => (super.noSuchMethod(
+  _i6.Future<void> flush() => (super.noSuchMethod(
         Invocation.method(
           #flush,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }
 
 /// A class which mocks [MedicineLocalDataSource].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockMedicineLocalDataSource extends _i1.Mock
-    implements _i10.MedicineLocalDataSource {
+    implements _i11.MedicineLocalDataSource {
   MockMedicineLocalDataSource() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<bool> updateMedicine(_i3.MedicineModel? medicine) =>
+  _i6.Future<bool> updateMedicine(_i3.MedicineModel? medicine) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateMedicine,
           [medicine],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i5.Future<bool> addMedicine(_i3.MedicineModel? medicine) =>
+  _i6.Future<bool> addMedicine(_i3.MedicineModel? medicine) =>
       (super.noSuchMethod(
         Invocation.method(
           #addMedicine,
           [medicine],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 
   @override
-  _i5.Future<_i3.MedicineModel> getMedicine(String? id) => (super.noSuchMethod(
+  _i6.Future<_i3.MedicineModel> getMedicine(String? id) => (super.noSuchMethod(
         Invocation.method(
           #getMedicine,
           [id],
         ),
-        returnValue: _i5.Future<_i3.MedicineModel>.value(_FakeMedicineModel_1(
+        returnValue: _i6.Future<_i3.MedicineModel>.value(_FakeMedicineModel_1(
           this,
           Invocation.method(
             #getMedicine,
             [id],
           ),
         )),
-      ) as _i5.Future<_i3.MedicineModel>);
+      ) as _i6.Future<_i3.MedicineModel>);
 
   @override
-  _i5.Future<List<_i3.MedicineModel>> getMedicines() => (super.noSuchMethod(
+  _i6.Future<List<_i3.MedicineModel>> getMedicines() => (super.noSuchMethod(
         Invocation.method(
           #getMedicines,
           [],
         ),
         returnValue:
-            _i5.Future<List<_i3.MedicineModel>>.value(<_i3.MedicineModel>[]),
-      ) as _i5.Future<List<_i3.MedicineModel>>);
+            _i6.Future<List<_i3.MedicineModel>>.value(<_i3.MedicineModel>[]),
+      ) as _i6.Future<List<_i3.MedicineModel>>);
 
   @override
-  _i5.Future<bool> deleteMedicine(String? id) => (super.noSuchMethod(
+  _i6.Future<bool> deleteMedicine(String? id) => (super.noSuchMethod(
         Invocation.method(
           #deleteMedicine,
           [id],
         ),
-        returnValue: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+        returnValue: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
 }
 
 /// A class which mocks [FlutterLocalNotificationsPlugin].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFlutterLocalNotificationsPlugin extends _i1.Mock
-    implements _i11.FlutterLocalNotificationsPlugin {
+    implements _i12.FlutterLocalNotificationsPlugin {
   MockFlutterLocalNotificationsPlugin() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Future<bool?> initialize(
-    _i12.InitializationSettings? initializationSettings, {
-    _i13.DidReceiveNotificationResponseCallback?
+  _i6.Future<bool?> initialize(
+    _i13.InitializationSettings? initializationSettings, {
+    _i14.DidReceiveNotificationResponseCallback?
         onDidReceiveNotificationResponse,
-    _i13.DidReceiveBackgroundNotificationResponseCallback?
+    _i14.DidReceiveBackgroundNotificationResponseCallback?
         onDidReceiveBackgroundNotificationResponse,
   }) =>
       (super.noSuchMethod(
@@ -516,25 +535,25 @@ class MockFlutterLocalNotificationsPlugin extends _i1.Mock
                 onDidReceiveBackgroundNotificationResponse,
           },
         ),
-        returnValue: _i5.Future<bool?>.value(),
-      ) as _i5.Future<bool?>);
+        returnValue: _i6.Future<bool?>.value(),
+      ) as _i6.Future<bool?>);
 
   @override
-  _i5.Future<_i13.NotificationAppLaunchDetails?>
+  _i6.Future<_i14.NotificationAppLaunchDetails?>
       getNotificationAppLaunchDetails() => (super.noSuchMethod(
             Invocation.method(
               #getNotificationAppLaunchDetails,
               [],
             ),
-            returnValue: _i5.Future<_i13.NotificationAppLaunchDetails?>.value(),
-          ) as _i5.Future<_i13.NotificationAppLaunchDetails?>);
+            returnValue: _i6.Future<_i14.NotificationAppLaunchDetails?>.value(),
+          ) as _i6.Future<_i14.NotificationAppLaunchDetails?>);
 
   @override
-  _i5.Future<void> show(
+  _i6.Future<void> show(
     int? id,
     String? title,
     String? body,
-    _i14.NotificationDetails? notificationDetails, {
+    _i15.NotificationDetails? notificationDetails, {
     String? payload,
   }) =>
       (super.noSuchMethod(
@@ -548,12 +567,12 @@ class MockFlutterLocalNotificationsPlugin extends _i1.Mock
           ],
           {#payload: payload},
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> cancel(
+  _i6.Future<void> cancel(
     int? id, {
     String? tag,
   }) =>
@@ -563,32 +582,32 @@ class MockFlutterLocalNotificationsPlugin extends _i1.Mock
           [id],
           {#tag: tag},
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> cancelAll() => (super.noSuchMethod(
+  _i6.Future<void> cancelAll() => (super.noSuchMethod(
         Invocation.method(
           #cancelAll,
           [],
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> zonedSchedule(
+  _i6.Future<void> zonedSchedule(
     int? id,
     String? title,
     String? body,
-    _i15.TZDateTime? scheduledDate,
-    _i14.NotificationDetails? notificationDetails, {
-    required _i16.UILocalNotificationDateInterpretation?
+    _i16.TZDateTime? scheduledDate,
+    _i15.NotificationDetails? notificationDetails, {
+    required _i17.UILocalNotificationDateInterpretation?
         uiLocalNotificationDateInterpretation,
-    required _i17.AndroidScheduleMode? androidScheduleMode,
+    required _i18.AndroidScheduleMode? androidScheduleMode,
     String? payload,
-    _i18.DateTimeComponents? matchDateTimeComponents,
+    _i19.DateTimeComponents? matchDateTimeComponents,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -608,18 +627,18 @@ class MockFlutterLocalNotificationsPlugin extends _i1.Mock
             #matchDateTimeComponents: matchDateTimeComponents,
           },
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> periodicallyShow(
+  _i6.Future<void> periodicallyShow(
     int? id,
     String? title,
     String? body,
-    _i13.RepeatInterval? repeatInterval,
-    _i14.NotificationDetails? notificationDetails, {
-    required _i17.AndroidScheduleMode? androidScheduleMode,
+    _i14.RepeatInterval? repeatInterval,
+    _i15.NotificationDetails? notificationDetails, {
+    required _i18.AndroidScheduleMode? androidScheduleMode,
     String? payload,
   }) =>
       (super.noSuchMethod(
@@ -637,19 +656,19 @@ class MockFlutterLocalNotificationsPlugin extends _i1.Mock
             #payload: payload,
           },
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<void> periodicallyShowWithDuration(
+  _i6.Future<void> periodicallyShowWithDuration(
     int? id,
     String? title,
     String? body,
     Duration? repeatDurationInterval,
-    _i14.NotificationDetails? notificationDetails, {
-    _i17.AndroidScheduleMode? androidScheduleMode =
-        _i17.AndroidScheduleMode.exact,
+    _i15.NotificationDetails? notificationDetails, {
+    _i18.AndroidScheduleMode? androidScheduleMode =
+        _i18.AndroidScheduleMode.exact,
     String? payload,
   }) =>
       (super.noSuchMethod(
@@ -667,30 +686,104 @@ class MockFlutterLocalNotificationsPlugin extends _i1.Mock
             #payload: payload,
           },
         ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 
   @override
-  _i5.Future<List<_i13.PendingNotificationRequest>>
+  _i6.Future<List<_i14.PendingNotificationRequest>>
       pendingNotificationRequests() => (super.noSuchMethod(
             Invocation.method(
               #pendingNotificationRequests,
               [],
             ),
             returnValue:
-                _i5.Future<List<_i13.PendingNotificationRequest>>.value(
-                    <_i13.PendingNotificationRequest>[]),
-          ) as _i5.Future<List<_i13.PendingNotificationRequest>>);
+                _i6.Future<List<_i14.PendingNotificationRequest>>.value(
+                    <_i14.PendingNotificationRequest>[]),
+          ) as _i6.Future<List<_i14.PendingNotificationRequest>>);
 
   @override
-  _i5.Future<List<_i13.ActiveNotification>> getActiveNotifications() =>
+  _i6.Future<List<_i14.ActiveNotification>> getActiveNotifications() =>
       (super.noSuchMethod(
         Invocation.method(
           #getActiveNotifications,
           [],
         ),
-        returnValue: _i5.Future<List<_i13.ActiveNotification>>.value(
-            <_i13.ActiveNotification>[]),
-      ) as _i5.Future<List<_i13.ActiveNotification>>);
+        returnValue: _i6.Future<List<_i14.ActiveNotification>>.value(
+            <_i14.ActiveNotification>[]),
+      ) as _i6.Future<List<_i14.ActiveNotification>>);
+}
+
+/// A class which mocks [ShowNotificationUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockShowNotificationUsecase extends _i1.Mock
+    implements _i20.ShowNotificationUsecase {
+  MockShowNotificationUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.NotificationRepository get notificationRepository => (super.noSuchMethod(
+        Invocation.getter(#notificationRepository),
+        returnValue: _FakeNotificationRepository_2(
+          this,
+          Invocation.getter(#notificationRepository),
+        ),
+      ) as _i4.NotificationRepository);
+
+  @override
+  _i6.Future<_i2.Either<_i7.Failure, bool>> execute(
+          _i21.NotificationEntity? notification) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #execute,
+          [notification],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, bool>>.value(
+            _FakeEither_0<_i7.Failure, bool>(
+          this,
+          Invocation.method(
+            #execute,
+            [notification],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
+}
+
+/// A class which mocks [ShowFullScreenNotificationUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockShowFullScreenNotificationUsecase extends _i1.Mock
+    implements _i22.ShowFullScreenNotificationUsecase {
+  MockShowFullScreenNotificationUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.NotificationRepository get notificationRepository => (super.noSuchMethod(
+        Invocation.getter(#notificationRepository),
+        returnValue: _FakeNotificationRepository_2(
+          this,
+          Invocation.getter(#notificationRepository),
+        ),
+      ) as _i4.NotificationRepository);
+
+  @override
+  _i6.Future<_i2.Either<_i7.Failure, bool>> execute(
+          _i21.NotificationEntity? notification) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #execute,
+          [notification],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, bool>>.value(
+            _FakeEither_0<_i7.Failure, bool>(
+          this,
+          Invocation.method(
+            #execute,
+            [notification],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
 }

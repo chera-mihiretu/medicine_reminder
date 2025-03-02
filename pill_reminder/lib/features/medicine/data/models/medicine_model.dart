@@ -31,19 +31,32 @@ class MedicineModel extends MedicineEntity {
   // ignore: overridden_fields
   final DateTime startDate;
 
-  const MedicineModel({
-    required this.medicineId,
-    required this.name,
-    required this.interval,
-    required this.time,
-    required this.startDate,
-  }) : super(
-          medicineId: medicineId,
-          name: name,
-          interval: interval,
-          time: time,
-          startDate: startDate,
-        );
+  @override
+  @HiveField(5)
+  // ignore: overridden_fields
+  final int medicineAmount;
+
+  @override
+  @HiveField(6)
+  // ignore: overridden_fields
+  final int medicineTaken;
+
+  const MedicineModel(
+      {required this.medicineId,
+      required this.name,
+      required this.interval,
+      required this.time,
+      required this.startDate,
+      required this.medicineAmount,
+      required this.medicineTaken})
+      : super(
+            medicineId: medicineId,
+            name: name,
+            interval: interval,
+            time: time,
+            startDate: startDate,
+            medicineAmount: medicineAmount,
+            medicineTaken: medicineTaken);
 
   factory MedicineModel.fromJson(Map<String, dynamic> json) {
     return MedicineModel(
@@ -51,7 +64,11 @@ class MedicineModel extends MedicineEntity {
       name: json['name'],
       interval: json['interval'],
       time: json['time'],
-      startDate: DateTime.parse(json['startDate']),
+      startDate: DateTime.parse(
+        json['startDate'],
+      ),
+      medicineAmount: json['medicineAmount'],
+      medicineTaken: json['medicineTaken'],
     );
   }
 
@@ -62,6 +79,8 @@ class MedicineModel extends MedicineEntity {
       interval: entity.interval,
       time: entity.time,
       startDate: entity.startDate,
+      medicineAmount: entity.medicineAmount,
+      medicineTaken: entity.medicineTaken,
     );
   }
 
@@ -72,16 +91,19 @@ class MedicineModel extends MedicineEntity {
       'interval': interval,
       'time': time,
       'startDate': startDate.toIso8601String(),
+      'medicineAmount': medicineAmount,
+      'medicineTaken': medicineTaken
     };
   }
 
   MedicineEntity toEntity() {
     return MedicineEntity(
-      medicineId: medicineId,
-      name: name,
-      interval: interval,
-      time: time,
-      startDate: startDate,
-    );
+        medicineId: medicineId,
+        name: name,
+        interval: interval,
+        time: time,
+        startDate: startDate,
+        medicineAmount: medicineAmount,
+        medicineTaken: medicineTaken);
   }
 }

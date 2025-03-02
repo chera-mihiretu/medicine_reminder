@@ -1,63 +1,75 @@
 import 'package:flutter/material.dart';
 
 class MyTheme {
-  static const String fontFamily = 'Poppins';
+  // light theme
+  static const Color backgroundColor = Color(0xFFF9F9F9);
+  static const Color blueDark = Color(0xFF0065F9);
+  static const Color grayBackground = Color(0xFFEAEAEA);
+  static const Color skyBlue = Color(0xFFB1E4F9);
+  static const Color blueLight = Color(0xFF60B7FF);
+  static const Color blue = Color(0xFF229BFF);
+  static const Color whiteTextColor = Color(0xFFFFFFFF);
+  static const Color cardShadow = Color.fromARGB(255, 202, 202, 202);
 
-  static final ThemeData lightTheme = ThemeData(
-    primaryColor: const Color(0xFF0D47A1), // Very dark blue
-    primaryColorLight: const Color(0xFFE3F2FD), // Very light blue
-    primaryColorDark:
-        const Color.fromARGB(255, 167, 192, 230), // Very dark blue
-    scaffoldBackgroundColor: Colors.white, // White background
-    buttonTheme: const ButtonThemeData(
-      buttonColor: Color(0xFF0D47A1), // Very dark blue
-      textTheme: ButtonTextTheme.primary,
-    ),
-    textButtonTheme: TextButtonThemeData(
-      style: TextButton.styleFrom(
-        textStyle: const TextStyle(
-          color: Colors.white,
-          fontFamily: fontFamily,
-        ),
-        foregroundColor: Colors.white, // Set text color to white
-      ),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        textStyle: const TextStyle(
-          fontFamily: fontFamily,
-        ),
-        foregroundColor: Colors.white, // Set text color to white
-      ),
-    ),
-    appBarTheme: const AppBarTheme(
-      color: Color.fromARGB(255, 25, 108, 231), // Very dark blue
-      titleTextStyle: TextStyle(
-        color: Colors.white, // Text on dark blue should be white
-        fontSize: 20.0,
-        fontFamily: fontFamily,
-      ),
+  static const String poppin = "Poppins"; // dark theme
+  static const Color backgroundColorNight = Color(0xFF121212);
+  static const Color blueDarkNight = Color(0xFF003366);
+  static const Color grayBackgroundNight = Color(0xFF1E1E1E);
+  static const Color skyBlueNight = Color(0xFF4A90E2);
+  static const Color blueLightNight = Color(0xFF3366FF);
+  static const Color blueNight = Color(0xFF0055FF);
+  static const Color whiteTextColorNight = Color(0xFFCCCCCC);
+  static const Color cardShadowNight = Color.fromARGB(255, 50, 50, 50);
+  static ThemeData lightThem = ThemeData(
+    scaffoldBackgroundColor: backgroundColor,
+    brightness: Brightness.light,
+    primaryColor: blue,
+    cardColor: blueDark,
+    primaryColorDark: grayBackground,
+    hoverColor: cardShadow,
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: skyBlue,
     ),
     textTheme: const TextTheme(
-      bodySmall: TextStyle(
-        color: Colors.black, // Text on light blue should be black
-        fontFamily: fontFamily,
+      displayMedium: TextStyle(
+        color: whiteTextColor,
+        fontFamily: poppin,
+        fontWeight: FontWeight.bold,
+      ),
+      displaySmall: TextStyle(
+        color: whiteTextColor,
+        fontFamily: poppin,
+        fontWeight: FontWeight.bold,
       ),
       bodyMedium: TextStyle(
-        color: Colors.black, // Text on light blue should be black
-        fontFamily: fontFamily,
-      ),
-      displayLarge: TextStyle(
-        color: Colors.white, // Text on dark blue should be white
-        fontFamily: fontFamily,
-      ),
-      displayMedium: TextStyle(
-        color: Colors.white, // Text on dark blue should be white
-        fontFamily: fontFamily,
+        fontFamily: poppin,
+        color: whiteTextColor,
       ),
     ),
-    iconTheme: const IconThemeData(
-      color: Color(0xFF0D47A1), // Very dark blue
+  );
+
+  static ThemeData darkTheme = ThemeData(
+    scaffoldBackgroundColor: backgroundColorNight,
+    brightness: Brightness.dark,
+    primaryColor: blueNight,
+    cardColor: blueDarkNight,
+    primaryColorDark: grayBackgroundNight,
+    hoverColor: cardShadowNight,
+    textTheme: const TextTheme(
+      displayMedium: TextStyle(
+        color: whiteTextColorNight,
+        fontFamily: poppin,
+        fontWeight: FontWeight.bold,
+      ),
+      displaySmall: TextStyle(
+        color: whiteTextColorNight,
+        fontFamily: poppin,
+        fontWeight: FontWeight.bold,
+      ),
+      bodyMedium: TextStyle(
+        fontFamily: poppin,
+        color: whiteTextColor,
+      ),
     ),
   );
 }

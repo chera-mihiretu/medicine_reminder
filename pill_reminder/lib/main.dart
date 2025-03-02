@@ -20,8 +20,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Pill Reminder',
-      theme: MyTheme.lightTheme, // Use the custom theme
+      theme: MyTheme.lightThem,
+      darkTheme: MyTheme.darkTheme,
+      themeMode: ThemeMode.light,
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashScreen(),

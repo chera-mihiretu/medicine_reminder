@@ -55,7 +55,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = const MedicineLoadedState({});
+        loadedState = MedicineLoadedState({});
       }
       emit(MedicineLoadingState());
 
@@ -65,6 +65,8 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         interval: event.interval,
         time: event.time,
         startDate: event.startDate,
+        medicineAmount: event.medicineAmount,
+        medicineTaken: event.medicineTaken,
       );
 
       final result = await addMedicineUseCase.execute(medicine);
@@ -80,7 +82,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = const MedicineLoadedState({});
+        loadedState = MedicineLoadedState({});
       }
 
       emit(MedicineLoadingState());
@@ -91,6 +93,8 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         interval: event.interval,
         time: event.time,
         startDate: event.startDate,
+        medicineAmount: event.medicineAmount,
+        medicineTaken: event.medicineTaken,
       );
 
       final result = await updateMedicineUsecase.execute(medicine);
@@ -108,7 +112,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = const MedicineLoadedState({});
+        loadedState = MedicineLoadedState({});
       }
       emit(MedicineLoadingState());
 

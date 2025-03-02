@@ -10,55 +10,33 @@ class MedicineListScreen extends StatelessWidget {
     return Scaffold(
         body: SafeArea(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10, left: 10, right: 0),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 30),
-                      backgroundColor: Colors.blue[900],
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(100),
-                          bottomLeft: Radius.circular(100),
-                        ),
-                      ),
-                    ),
-                    child: const Text("Add Medicine"),
-                  ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  "assets/images/pill.png",
+                  width: 40,
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 10, left: 0, right: 10),
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 30),
-                      backgroundColor: Colors.red[900],
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(100),
-                          bottomRight: Radius.circular(100),
-                        ),
-                      ),
-                    ),
-                    child: const Text("Remove Medicine"),
-                  ),
-                ),
-              ),
-            ],
+                Text("Reminder",
+                    style: Theme.of(context).textTheme.displayMedium),
+              ],
+            ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: 10, // Replace with your dynamic item count
+              itemCount: 10, // Replace with your actual item count
               itemBuilder: (context, index) {
-                return const MedicineCard();
+                return const MedicineCard(
+                  medicineName: "Cloxa",
+                  mecineRemainingPercent: 80,
+                  medicineRemaining: 12,
+                );
               },
             ),
           ),

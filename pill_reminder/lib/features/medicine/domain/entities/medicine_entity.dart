@@ -9,14 +9,16 @@ class MedicineEntity extends Equatable {
   final int interval;
   final List<TimeOfDay> time;
   final DateTime startDate;
-
-  const MedicineEntity({
-    required this.medicineId,
-    required this.name,
-    required this.interval,
-    required this.time,
-    required this.startDate,
-  });
+  final int medicineAmount;
+  final int medicineTaken;
+  const MedicineEntity(
+      {required this.medicineId,
+      required this.name,
+      required this.interval,
+      required this.time,
+      required this.startDate,
+      required this.medicineAmount,
+      required this.medicineTaken});
 
   @override
   bool operator ==(Object other) {

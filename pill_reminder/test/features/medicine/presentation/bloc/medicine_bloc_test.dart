@@ -24,12 +24,13 @@ void main() {
   late DeleteMedicineUsecase deleteMedicineUsecase;
   late AddMedicineUsecase addMedicineUsecase;
   MedicineEntity testData = MedicineEntity(
-    medicineId: "",
-    name: MedicineTestData.medicineEntity.name,
-    interval: MedicineTestData.medicineEntity.interval,
-    time: MedicineTestData.medicineEntity.time,
-    startDate: MedicineTestData.medicineEntity.startDate,
-  );
+      medicineId: "",
+      name: MedicineTestData.medicineEntity.name,
+      interval: MedicineTestData.medicineEntity.interval,
+      time: MedicineTestData.medicineEntity.time,
+      startDate: MedicineTestData.medicineEntity.startDate,
+      medicineAmount: MedicineTestData.medicineEntity.medicineAmount,
+      medicineTaken: MedicineTestData.medicineEntity.medicineTaken);
 
   setUp(() {
     mockMedicineRepository = MockMedicineRepository();
@@ -106,7 +107,9 @@ void main() {
             name: testData.name,
             interval: testData.interval,
             time: testData.time,
-            startDate: testData.startDate));
+            startDate: testData.startDate,
+            medicineAmount: testData.medicineAmount,
+            medicineTaken: testData.medicineTaken));
       },
       expect: () {
         return [
@@ -131,7 +134,9 @@ void main() {
             name: testData.name,
             interval: testData.interval,
             time: testData.time,
-            startDate: testData.startDate));
+            startDate: testData.startDate,
+            medicineAmount: testData.medicineAmount,
+            medicineTaken: testData.medicineTaken));
       },
       expect: () => [
         MedicineLoadingState(),

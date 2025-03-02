@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 6), () {
+    Timer(const Duration(milliseconds: 6000), () {
       Navigator.of(context).pushReplacementNamed(MedicineListScreen.routeName);
     });
   }

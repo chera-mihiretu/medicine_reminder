@@ -1,55 +1,111 @@
-import 'package:flutter/widgets.dart';
-import 'package:pill_reminder/cores/theme/my_theme.dart';
+import 'package:flutter/material.dart';
+import 'package:pill_reminder/features/medicine/presentation/widgets/custom_progress.dart';
 
 class MedicineCard extends StatelessWidget {
-  const MedicineCard({super.key});
+  final String medicineName;
+  final int mecineRemainingPercent;
+  final int medicineRemaining;
+
+  const MedicineCard({
+    super.key,
+    required this.medicineName,
+    required this.mecineRemainingPercent,
+    required this.medicineRemaining,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).hoverColor,
+              spreadRadius: 1,
+              blurRadius: 3,
             ),
-            margin: const EdgeInsets.only(left: 10, bottom: 10),
-            decoration: BoxDecoration(
-              color: MyTheme.lightTheme.primaryColorLight,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(
-                  10,
-                ),
-                topLeft: Radius.circular(
-                  10,
+          ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            medicineName,
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 0, vertical: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Text("Remaining"),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 16),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(medicineRemaining.toString(),
+                                  style:
+                                      Theme.of(context).textTheme.displaySmall),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: CustomProgress(percent: mecineRemainingPercent),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            child: Column(children: [
-              Text(name),
-            ]),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      bottomRight: Radius.circular(10),
+                    ),
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  child: Center(
+                    child: Image.asset("assets/images/drugs.png"),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 10,
-            ),
-            margin: const EdgeInsets.only(right: 10, bottom: 10),
-            decoration: BoxDecoration(
-              color: MyTheme.lightTheme.primaryColor,
-              borderRadius: const BorderRadius.only(
-                bottomRight: Radius.circular(
-                  10,
-                ),
-                topRight: Radius.circular(
-                  10,
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
+      ),
     );
   }
 }

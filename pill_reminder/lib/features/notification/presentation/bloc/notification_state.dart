@@ -1,4 +1,9 @@
-sealed class NotificationState {}
+import 'package:equatable/equatable.dart';
+
+sealed class NotificationState extends Equatable {
+  @override
+  List<Object> get props => [];
+}
 
 class NotificationInitialState extends NotificationState {}
 

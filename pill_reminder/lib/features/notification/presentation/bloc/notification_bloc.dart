@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/features/notification/data/models/notification_model.dart';
+import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/show_full_screen_notification_usecase.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/show_notification_usecase.dart';
 import 'package:pill_reminder/features/notification/presentation/bloc/notification_event.dart';
@@ -11,9 +12,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   NotificationBloc(
       this.showNotificationUsecase, this.showFullScreenNotificationUsecase)
       : super(NotificationInitialState()) {
-    on<ShowNotifaicationEvent>((event, emit) async {
+    on<ShowNotificationEvent>((event, emit) async {
       emit(NotificationLoadingState());
-      final notification = NotificationModel(
+      final notification = NotificationEntity(
         id: event.id,
         title: event.title,
         body: event.body,
@@ -37,7 +38,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     });
     on<ShowFullScreenNotification>((event, emit) async {
       emit(NotificationLoadingState());
-      final notification = NotificationModel(
+      final notification = NotificationEntity(
         id: event.id,
         title: event.title,
         body: event.body,

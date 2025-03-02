@@ -29,6 +29,8 @@ void main() {
     interval: MedicineTestData.medicineEntity.interval,
     time: MedicineTestData.medicineEntity.time,
     startDate: MedicineTestData.medicineEntity.startDate,
+    medicineAmount: MedicineTestData.medicineEntity.medicineAmount,
+    medicineTaken: MedicineTestData.medicineEntity.medicineTaken,
   );
 
   setUp(() {
@@ -106,7 +108,9 @@ void main() {
             name: testData.name,
             interval: testData.interval,
             time: testData.time,
-            startDate: testData.startDate));
+            startDate: testData.startDate,
+            medicineAmount: testData.medicineAmount,
+            medicineTaken: testData.medicineTaken));
       },
       expect: () {
         return [
@@ -131,7 +135,9 @@ void main() {
             name: testData.name,
             interval: testData.interval,
             time: testData.time,
-            startDate: testData.startDate));
+            startDate: testData.startDate,
+            medicineAmount: testData.medicineAmount,
+            medicineTaken: testData.medicineTaken));
       },
       expect: () => [
         MedicineLoadingState(),

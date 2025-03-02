@@ -2,7 +2,7 @@ import 'package:pill_reminder/features/notification/domain/entities/notifaction_
 
 sealed class NotificationEvent {}
 
-class ShowNotifaicationEvent extends NotificationEvent {
+class ShowNotificationEvent extends NotificationEvent {
   final int id;
   final String title;
   final String body;
@@ -17,7 +17,7 @@ class ShowNotifaicationEvent extends NotificationEvent {
   final MyPriority priority;
   final MyImportance importance;
 
-  ShowNotifaicationEvent({
+  ShowNotificationEvent({
     required this.id,
     required this.title,
     required this.body,
