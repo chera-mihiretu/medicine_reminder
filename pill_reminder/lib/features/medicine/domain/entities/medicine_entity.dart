@@ -11,6 +11,7 @@ class MedicineEntity extends Equatable {
   final DateTime startDate;
   final int medicineAmount;
   final int medicineTaken;
+  final TimeOfDay lastTriggered;
   const MedicineEntity(
       {required this.medicineId,
       required this.name,
@@ -18,7 +19,8 @@ class MedicineEntity extends Equatable {
       required this.time,
       required this.startDate,
       required this.medicineAmount,
-      required this.medicineTaken});
+      required this.medicineTaken,
+      required this.lastTriggered});
 
   @override
   bool operator ==(Object other) {

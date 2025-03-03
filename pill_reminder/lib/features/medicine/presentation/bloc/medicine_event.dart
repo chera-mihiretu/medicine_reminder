@@ -17,17 +17,28 @@ class AddMedicineEvent extends MedicineEvent {
   final DateTime startDate;
   final int medicineAmount;
   final int medicineTaken;
+  final TimeOfDay lastTriggered;
 
-  const AddMedicineEvent(
-      {required this.name,
-      required this.interval,
-      required this.time,
-      required this.startDate,
-      required this.medicineAmount,
-      required this.medicineTaken});
+  const AddMedicineEvent({
+    required this.name,
+    required this.interval,
+    required this.time,
+    required this.startDate,
+    required this.medicineAmount,
+    required this.medicineTaken,
+    required this.lastTriggered,
+  });
 
   @override
-  List<Object> get props => [name, interval, time, startDate];
+  List<Object> get props => [
+        name,
+        interval,
+        time,
+        startDate,
+        medicineAmount,
+        medicineTaken,
+        lastTriggered
+      ];
 }
 
 class GetMedicineEvent extends MedicineEvent {
@@ -49,6 +60,7 @@ class UpdataeMedicineEvent extends MedicineEvent {
   final DateTime startDate;
   final int medicineAmount;
   final int medicineTaken;
+  final TimeOfDay lastTriggered;
 
   const UpdataeMedicineEvent(
       {required this.medicineId,
@@ -57,10 +69,20 @@ class UpdataeMedicineEvent extends MedicineEvent {
       required this.time,
       required this.startDate,
       required this.medicineAmount,
-      required this.medicineTaken});
+      required this.medicineTaken,
+      required this.lastTriggered});
 
   @override
-  List<Object> get props => [medicineId, name, interval, time, startDate];
+  List<Object> get props => [
+        medicineId,
+        name,
+        interval,
+        time,
+        startDate,
+        medicineAmount,
+        medicineTaken,
+        lastTriggered
+      ];
 }
 
 class DeleteMedicineEvent extends MedicineEvent {

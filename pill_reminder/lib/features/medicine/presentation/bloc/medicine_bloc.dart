@@ -67,6 +67,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         startDate: event.startDate,
         medicineAmount: event.medicineAmount,
         medicineTaken: event.medicineTaken,
+        lastTriggered: event.lastTriggered,
       );
 
       final result = await addMedicineUseCase.execute(medicine);
@@ -95,6 +96,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         startDate: event.startDate,
         medicineAmount: event.medicineAmount,
         medicineTaken: event.medicineTaken,
+        lastTriggered: event.lastTriggered,
       );
 
       final result = await updateMedicineUsecase.execute(medicine);

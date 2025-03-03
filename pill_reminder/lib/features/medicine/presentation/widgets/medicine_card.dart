@@ -19,10 +19,11 @@ class MedicineCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
           boxShadow: [
             BoxShadow(
               color: Theme.of(context).hoverColor,
-              spreadRadius: 1,
+              spreadRadius: 2,
               blurRadius: 3,
             ),
           ],
@@ -33,73 +34,60 @@ class MedicineCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      bottomLeft: Radius.circular(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        medicineName,
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Remaining",
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            medicineName,
-                            style: Theme.of(context).textTheme.displaySmall,
+                          Text(
+                            medicineRemaining.toString(),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 40, vertical: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Taken",
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
-                        ),
+                          Text(
+                            medicineRemaining.toString(),
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          )
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 0, vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            const Text("Remaining"),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 16),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Text(medicineRemaining.toString(),
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: CustomProgress(percent: mecineRemainingPercent),
-                      ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: CustomProgress(percent: mecineRemainingPercent),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                    color: Theme.of(context).primaryColorDark,
-                  ),
-                  child: Center(
-                    child: Image.asset("assets/images/drugs.png"),
-                  ),
+                child: Center(
+                  child: Image.asset("assets/images/drugs.png"),
                 ),
               ),
             ],

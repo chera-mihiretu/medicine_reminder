@@ -31,6 +31,8 @@ import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.
     as _i8;
 import 'package:pill_reminder/features/medicine/domain/repositories/medicine_repository.dart'
     as _i5;
+import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart'
+    as _i23;
 import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart'
     as _i21;
 import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart'
@@ -78,6 +80,17 @@ class _FakeMedicineModel_1 extends _i1.SmartFake implements _i3.MedicineModel {
 class _FakeNotificationRepository_2 extends _i1.SmartFake
     implements _i4.NotificationRepository {
   _FakeNotificationRepository_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeMedicineRepository_3 extends _i1.SmartFake
+    implements _i5.MedicineRepository {
+  _FakeMedicineRepository_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -782,6 +795,71 @@ class MockShowFullScreenNotificationUsecase extends _i1.Mock
           this,
           Invocation.method(
             #execute,
+            [notification],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
+}
+
+/// A class which mocks [GetAllMedicineUsecase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGetAllMedicineUsecase extends _i1.Mock
+    implements _i23.GetAllMedicineUsecase {
+  MockGetAllMedicineUsecase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.MedicineRepository get repository => (super.noSuchMethod(
+        Invocation.getter(#repository),
+        returnValue: _FakeMedicineRepository_3(
+          this,
+          Invocation.getter(#repository),
+        ),
+      ) as _i5.MedicineRepository);
+
+  @override
+  _i6.Future<_i2.Either<_i7.Failure, List<_i8.MedicineEntity>>> execute() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #execute,
+          [],
+        ),
+        returnValue:
+            _i6.Future<_i2.Either<_i7.Failure, List<_i8.MedicineEntity>>>.value(
+                _FakeEither_0<_i7.Failure, List<_i8.MedicineEntity>>(
+          this,
+          Invocation.method(
+            #execute,
+            [],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i7.Failure, List<_i8.MedicineEntity>>>);
+}
+
+/// A class which mocks [NotificationRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationRepository extends _i1.Mock
+    implements _i4.NotificationRepository {
+  MockNotificationRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<_i2.Either<_i7.Failure, bool>> showNotification(
+          _i21.NotificationEntity? notification) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #showNotification,
+          [notification],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i7.Failure, bool>>.value(
+            _FakeEither_0<_i7.Failure, bool>(
+          this,
+          Invocation.method(
+            #showNotification,
             [notification],
           ),
         )),

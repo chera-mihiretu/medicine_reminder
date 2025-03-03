@@ -34,13 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.fill,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Pill Reminder',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text('Pill Reminder',
+                style: Theme.of(context).textTheme.displayLarge),
           ],
         ),
       ),

@@ -31,6 +31,7 @@ void main() {
     startDate: MedicineTestData.medicineEntity.startDate,
     medicineAmount: MedicineTestData.medicineEntity.medicineAmount,
     medicineTaken: MedicineTestData.medicineEntity.medicineTaken,
+    lastTriggered: MedicineTestData.medicineEntity.lastTriggered,
   );
 
   setUp(() {
@@ -104,13 +105,17 @@ void main() {
             .thenAnswer((_) async => const Right(true));
       },
       act: (testBloc) {
-        testBloc.add(AddMedicineEvent(
+        testBloc.add(
+          AddMedicineEvent(
             name: testData.name,
             interval: testData.interval,
             time: testData.time,
             startDate: testData.startDate,
             medicineAmount: testData.medicineAmount,
-            medicineTaken: testData.medicineTaken));
+            medicineTaken: testData.medicineTaken,
+            lastTriggered: testData.lastTriggered,
+          ),
+        );
       },
       expect: () {
         return [
@@ -130,14 +135,18 @@ void main() {
             .thenAnswer((_) async => const Right(true));
       },
       act: (testBloc) {
-        testBloc.add(UpdataeMedicineEvent(
+        testBloc.add(
+          UpdataeMedicineEvent(
             medicineId: testData.medicineId,
             name: testData.name,
             interval: testData.interval,
             time: testData.time,
             startDate: testData.startDate,
             medicineAmount: testData.medicineAmount,
-            medicineTaken: testData.medicineTaken));
+            medicineTaken: testData.medicineTaken,
+            lastTriggered: testData.lastTriggered,
+          ),
+        );
       },
       expect: () => [
         MedicineLoadingState(),

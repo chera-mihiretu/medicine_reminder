@@ -41,6 +41,11 @@ class MedicineModel extends MedicineEntity {
   // ignore: overridden_fields
   final int medicineTaken;
 
+  @override
+  @HiveField(7)
+  // ignore: overridden_fields
+  final TimeOfDay lastTriggered;
+
   const MedicineModel(
       {required this.medicineId,
       required this.name,
@@ -48,7 +53,8 @@ class MedicineModel extends MedicineEntity {
       required this.time,
       required this.startDate,
       required this.medicineAmount,
-      required this.medicineTaken})
+      required this.medicineTaken,
+      required this.lastTriggered})
       : super(
             medicineId: medicineId,
             name: name,
@@ -56,7 +62,8 @@ class MedicineModel extends MedicineEntity {
             time: time,
             startDate: startDate,
             medicineAmount: medicineAmount,
-            medicineTaken: medicineTaken);
+            medicineTaken: medicineTaken,
+            lastTriggered: lastTriggered);
 
   factory MedicineModel.fromJson(Map<String, dynamic> json) {
     return MedicineModel(
@@ -69,6 +76,7 @@ class MedicineModel extends MedicineEntity {
       ),
       medicineAmount: json['medicineAmount'],
       medicineTaken: json['medicineTaken'],
+      lastTriggered: json['lastTriggered'],
     );
   }
 
@@ -81,6 +89,7 @@ class MedicineModel extends MedicineEntity {
       startDate: entity.startDate,
       medicineAmount: entity.medicineAmount,
       medicineTaken: entity.medicineTaken,
+      lastTriggered: entity.lastTriggered,
     );
   }
 
@@ -92,7 +101,8 @@ class MedicineModel extends MedicineEntity {
       'time': time,
       'startDate': startDate.toIso8601String(),
       'medicineAmount': medicineAmount,
-      'medicineTaken': medicineTaken
+      'medicineTaken': medicineTaken,
+      'lastTriggered': lastTriggered
     };
   }
 
@@ -104,6 +114,7 @@ class MedicineModel extends MedicineEntity {
         time: time,
         startDate: startDate,
         medicineAmount: medicineAmount,
-        medicineTaken: medicineTaken);
+        medicineTaken: medicineTaken,
+        lastTriggered: lastTriggered);
   }
 }

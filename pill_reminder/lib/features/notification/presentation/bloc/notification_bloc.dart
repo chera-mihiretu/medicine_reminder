@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pill_reminder/features/notification/data/models/notification_model.dart';
 import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/show_full_screen_notification_usecase.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/show_notification_usecase.dart';
@@ -54,7 +53,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         importance: event.importance,
       );
 
-      final result = await showNotificationUsecase.execute(notification);
+      final result =
+          await showFullScreenNotificationUsecase.execute(notification);
 
       result.fold(
         (failure) => emit(NotificationErrorState(message: failure.message)),
