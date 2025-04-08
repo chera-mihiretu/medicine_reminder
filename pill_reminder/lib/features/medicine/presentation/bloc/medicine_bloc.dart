@@ -55,7 +55,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = MedicineLoadedState({});
+        loadedState = const MedicineLoadedState({});
       }
       emit(MedicineLoadingState());
 
@@ -83,7 +83,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = MedicineLoadedState({});
+        loadedState = const MedicineLoadedState({});
       }
 
       emit(MedicineLoadingState());
@@ -114,7 +114,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = MedicineLoadedState({});
+        loadedState = const MedicineLoadedState({});
       }
       emit(MedicineLoadingState());
 

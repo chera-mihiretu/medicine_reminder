@@ -13,10 +13,11 @@ class MedicineListScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pushNamed(AddMedicinePage.router);
           },
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.blue,
+          shape: const CircleBorder(),
           child: Icon(
             Icons.add,
-            color: Theme.of(context).iconTheme.color,
+            color: Theme.of(context).primaryColor,
           ),
         ),
         body: SafeArea(
@@ -27,26 +28,23 @@ class MedicineListScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/pill.png",
-                      width: 40,
-                    ),
-                    Text("Reminder",
-                        style: Theme.of(context).textTheme.displayMedium),
-                  ],
+                child: Center(
+                  child: Text("Reminder",
+                      style:
+                          Theme.of(context).textTheme.displayMedium?.copyWith(
+                                color: Theme.of(context).primaryColorLight,
+                              )),
                 ),
               ),
               Expanded(
                 child: ListView.builder(
                   itemCount: 10, // Replace with your actual item count
                   itemBuilder: (context, index) {
-                    return const MedicineCard(
+                    return MedicineCard(
                       medicineName: "Cloxa",
-                      mecineRemainingPercent: 80,
+                      mecineRemainingPercent: (index * 46) % 100 + 1,
                       medicineRemaining: 12,
+                      onDelete: () {},
                     );
                   },
                 ),

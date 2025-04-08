@@ -17,8 +17,8 @@ class MyTheme {
     brightness: Brightness.light,
     primaryColor: offWhite,
     cardColor: offWhite,
-    primaryColorDark: whiteBackground,
-    hoverColor: const Color.fromARGB(255, 224, 224, 224),
+    primaryColorDark: const Color.fromARGB(255, 0, 123, 255),
+    hoverColor: const Color.fromARGB(255, 226, 232, 240),
     inputDecorationTheme: const InputDecorationTheme(
       fillColor: Colors.white,
       filled: true,

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
 
 part 'medicine_model.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 1)
 class MedicineModel extends MedicineEntity {
   @override
   @HiveField(0)

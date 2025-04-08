@@ -2,25 +2,40 @@ import 'package:flutter/material.dart';
 
 class CustomProgress extends StatelessWidget {
   final int percent;
-  const CustomProgress({super.key, required this.percent});
+  const CustomProgress({super.key, required this.percent, required this.color});
+
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      const Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 20,
-          ),
-          child: Text("In progress")),
       LinearProgressIndicator(
-        minHeight: 40,
+        minHeight: 10,
         borderRadius: const BorderRadius.all(
           Radius.circular(100),
         ),
-        backgroundColor: Theme.of(context).primaryColorDark,
+        color: color,
+        backgroundColor: Theme.of(context).hoverColor,
         value: percent / 100,
       ),
+      const SizedBox(
+        height: 10,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(percent == 100 ? 'Completed' : 'In progress',
+              style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            "$percent%",
+            style: TextStyle(
+              color: color,
+              fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      )
     ]);
   }
 }

@@ -19,7 +19,7 @@ import 'package:flutter_local_notifications/src/platform_specifics/ios/enums.dar
 import 'package:flutter_local_notifications/src/types.dart' as _i19;
 import 'package:flutter_local_notifications_platform_interface/flutter_local_notifications_platform_interface.dart'
     as _i14;
-import 'package:hive/hive.dart' as _i9;
+import 'package:hive_flutter/hive_flutter.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i10;
 import 'package:pill_reminder/cores/error/failure.dart' as _i7;
