@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_mode.dart';
+import 'package:pill_reminder/features/medicine/presentation/widgets/custom_input.dart';
 
 class AddMedicinePage extends StatefulWidget {
   static const String router = '/add-medicine';
@@ -13,6 +14,8 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   MedicineMode _mode = MedicineMode.interval;
   final TextEditingController _medicineNameController = TextEditingController();
   final TextEditingController _intervalController = TextEditingController();
+  final TextEditingController _totalAmountController = TextEditingController();
+  final TextEditingController _takenAmountController = TextEditingController();
 
   // For specific time mode:
   final List<TextEditingController> _specificTimeControllers = [];
@@ -57,31 +60,38 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ChoiceChip(
-          label: const Text("Interval"),
-          selected: _mode == MedicineMode.interval,
-          onSelected: (selected) {
-            if (selected) {
-              setState(() {
-                _mode = MedicineMode.interval;
-              });
-            }
-          },
+        Expanded(
+          child: ChoiceChip(
+            backgroundColor: Theme.of(context).disabledColor,
+            selectedColor: Theme.of(context).primaryColorDark,
+            padding: const EdgeInsets.all(10),
+            label: const Text("Interval"),
+            selected: _mode == MedicineMode.interval,
+            onSelected: (selected) {
+              if (selected) {
+                setState(() {
+                  _mode = MedicineMode.interval;
+                });
+              }
+            },
+          ),
         ),
         const SizedBox(width: 16),
-        ChoiceChip(
-          label: const Text("Specific Time"),
-          selected: _mode == MedicineMode.specificTime,
-          onSelected: (selected) {
-            if (selected) {
-              setState(() {
-                _mode = MedicineMode.specificTime;
-                if (_specificTimeControllers.isEmpty) {
-                  _addSpecificTimeField();
-                }
-              });
-            }
-          },
+        Expanded(
+          child: ChoiceChip(
+            label: const Text("Specific Time"),
+            selected: _mode == MedicineMode.specificTime,
+            onSelected: (selected) {
+              if (selected) {
+                setState(() {
+                  _mode = MedicineMode.specificTime;
+                  if (_specificTimeControllers.isEmpty) {
+                    _addSpecificTimeField();
+                  }
+                });
+              }
+            },
+          ),
         ),
       ],
     );
@@ -89,13 +99,9 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   Widget _buildCustomInput() {
     if (_mode == MedicineMode.interval) {
-      return TextField(
+      return CustomInput(
         controller: _intervalController,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          hintText: "Enter interval in minutes",
-          labelStyle: Theme.of(context).inputDecorationTheme.labelStyle,
-        ),
+        hintText: "Interval (in hours)",
       );
     } else {
       return Column(
@@ -104,46 +110,77 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           ..._specificTimeControllers.asMap().entries.map((entry) {
             int index = entry.key;
             TextEditingController controller = entry.value;
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: controller,
-                readOnly: true,
-                decoration: InputDecoration(
-                  hintText: "Select time ${index + 1}",
-                  labelStyle: Theme.of(context).inputDecorationTheme.labelStyle,
-                ),
-                onTap: () => _pickSpecificTime(index),
-              ),
+            return CustomInput(
+              controller: controller,
+              hintText: "Select time ${index + 1}",
+              onTap: () => _pickSpecificTime(index),
             );
           }),
           // Button to add more time selection fields
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(20),
-                side:
-                    BorderSide(color: Theme.of(context).canvasColor, width: 4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: _addSpecificTimeField,
-              child: const Text("Add Time"),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(20),
-                side:
-                    BorderSide(color: Theme.of(context).canvasColor, width: 4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: _removeTime,
-              child: const Text("Remove Time"),
-            ),
-          ]),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(20),
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColorDark,
+                              width: .4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: _removeTime,
+                        child: Text(
+                          "Remove Time",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                  color: Theme.of(context).primaryColorDark),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(20),
+                          backgroundColor: Theme.of(context).primaryColorDark,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: _addSpecificTimeField,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Icon(
+                              Icons.add,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            Text(
+                              "Add Time",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                      color: Theme.of(context).primaryColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
+          ),
         ],
       );
     }
@@ -152,80 +189,80 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios_new),
+        ),
+        title: Text(
+          "Add Medicine",
+          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       backgroundColor: Theme.of(context).primaryColor,
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 50),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              color: Theme.of(context).primaryColor,
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Card(
+            color: Theme.of(context).cardColor,
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                color: Theme.of(context).dividerColor,
+                width: .5,
+              ),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            shadowColor: Theme.of(context).shadowColor,
+            elevation: 10,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/images/pill.png",
-                    width: 40,
+                  CustomInput(
+                    controller: _medicineNameController,
+                    hintText: "Medicine Name",
                   ),
-                  Text("Add", style: Theme.of(context).textTheme.displayMedium),
+                  // Toggle for mode
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
+                      child: _buildModeToggle()),
+                  // Display corresponding field based on selected mode
+                  _buildCustomInput(),
+                  // Other inputs (if needed)
+
+                  CustomInput(
+                    hintText: "Medicine Total Amount",
+                    controller: _totalAmountController,
+                  ),
+
+                  CustomInput(
+                      controller: _takenAmountController,
+                      hintText: "Medicine Taken Amount"),
+
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(20),
+                      side: BorderSide(
+                          color: Theme.of(context).canvasColor, width: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text("Add Medicine"),
+                  )
                 ],
               ),
             ),
-            const SizedBox(height: 60),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: TextField(
-                controller: _medicineNameController,
-                decoration: InputDecoration(
-                  hintText: "Medicine Name",
-                  labelStyle: Theme.of(context).inputDecorationTheme.labelStyle,
-                ),
-              ),
-            ),
-            // Toggle for mode
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: _buildModeToggle()),
-            // Display corresponding field based on selected mode
-            Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                child: _buildCustomInput()),
-            // Other inputs (if needed)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Medicine Total Amount",
-                  labelStyle: Theme.of(context).inputDecorationTheme.labelStyle,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Medicine Taken Amount",
-                  labelStyle: Theme.of(context).inputDecorationTheme.labelStyle,
-                ),
-              ),
-            ),
-
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(20),
-                side:
-                    BorderSide(color: Theme.of(context).canvasColor, width: 4),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text("Add Medicine"),
-            )
-          ],
+          ),
         ),
       ),
     );

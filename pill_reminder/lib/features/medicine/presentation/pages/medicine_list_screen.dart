@@ -9,6 +9,16 @@ class MedicineListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            "Medicine List",
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).pushNamed(AddMedicinePage.router);
@@ -23,19 +33,6 @@ class MedicineListScreen extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                ),
-                child: Center(
-                  child: Text("Reminder",
-                      style:
-                          Theme.of(context).textTheme.displayMedium?.copyWith(
-                                color: Theme.of(context).primaryColorLight,
-                              )),
-                ),
-              ),
               Expanded(
                 child: ListView.builder(
                   itemCount: 10, // Replace with your actual item count
