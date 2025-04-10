@@ -1,6 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pill_reminder/cores/constants/app_data.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pill_reminder/features/medicine/data/repositories/medicine_repository_impl.dart';
@@ -22,6 +23,9 @@ import 'package:pill_reminder/features/notification/domain/usecases/trigger_noti
 final locator = GetIt.instance;
 
 Future<void> init() async {
+  //! THeme provider
+  locator
+      .registerLazySingleton<ThemeProvider>(() => ThemeProvider.withDefaults());
   //! Hive Initialization and Registration
   await Hive.initFlutter();
   Hive.registerAdapter(MedicineModelAdapter());

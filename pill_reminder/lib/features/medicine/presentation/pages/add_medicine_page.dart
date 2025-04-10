@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pill_reminder/cores/theme/color_hub.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_mode.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/custom_input.dart';
+import 'package:provider/provider.dart';
 
 class AddMedicinePage extends StatefulWidget {
   static const String router = '/add-medicine';
@@ -56,16 +59,23 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     super.dispose();
   }
 
-  Widget _buildModeToggle() {
+  Widget _buildModeToggle(ColorHub colors) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
           child: ChoiceChip(
-            backgroundColor: Theme.of(context).disabledColor,
-            selectedColor: Theme.of(context).primaryColorDark,
+            checkmarkColor: colors.primaryButtonText,
+            backgroundColor: colors.disabled,
+            selectedColor: colors.primaryButton,
             padding: const EdgeInsets.all(10),
-            label: const Text("Interval"),
+            label: Text(
+              "Interval",
+              style: TextStyle(
+                  color: _mode == MedicineMode.interval
+                      ? colors.primaryButtonText
+                      : colors.text),
+            ),
             selected: _mode == MedicineMode.interval,
             onSelected: (selected) {
               if (selected) {
@@ -79,7 +89,16 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
         const SizedBox(width: 16),
         Expanded(
           child: ChoiceChip(
-            label: const Text("Specific Time"),
+            checkmarkColor: colors.primaryButtonText,
+            backgroundColor: colors.disabled,
+            selectedColor: colors.primaryButton,
+            label: Text(
+              "Specific Time",
+              style: TextStyle(
+                  color: _mode == MedicineMode.specificTime
+                      ? colors.primaryButtonText
+                      : colors.text),
+            ),
             selected: _mode == MedicineMode.specificTime,
             onSelected: (selected) {
               if (selected) {
@@ -97,7 +116,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
     );
   }
 
-  Widget _buildCustomInput() {
+  Widget _buildCustomInput(ColorHub colors) {
     if (_mode == MedicineMode.interval) {
       return CustomInput(
         controller: _intervalController,
@@ -122,15 +141,16 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
-                    child: Expanded(
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(20),
                           side: BorderSide(
-                              color: Theme.of(context).primaryColorDark,
-                              width: .4),
+                            color: colors.primaryButton,
+                            width: .4,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -141,8 +161,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyLarge
-                              ?.copyWith(
-                                  color: Theme.of(context).primaryColorDark),
+                              ?.copyWith(color: colors.primaryButton),
                         ),
                       ),
                     ),
@@ -153,7 +172,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(20),
-                          backgroundColor: Theme.of(context).primaryColorDark,
+                          backgroundColor: colors.primaryButton,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -164,15 +183,14 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
                           children: [
                             Icon(
                               Icons.add,
-                              color: Theme.of(context).primaryColor,
+                              color: colors.primaryIcon,
                             ),
                             Text(
                               "Add Time",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge
-                                  ?.copyWith(
-                                      color: Theme.of(context).primaryColor),
+                                  ?.copyWith(color: colors.primaryButtonText),
                             ),
                           ],
                         ),
@@ -188,6 +206,7 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Provider.of<ThemeProvider>(context).colors;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -201,65 +220,71 @@ class _AddMedicinePageState extends State<AddMedicinePage> {
           "Add Medicine",
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
+                color: colors.text,
               ),
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: colors.background,
       ),
-      backgroundColor: Theme.of(context).primaryColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Card(
-            color: Theme.of(context).cardColor,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: Theme.of(context).dividerColor,
-                width: .5,
+      backgroundColor: colors.background,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Card(
+              color: colors.card,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: colors.divider,
+                  width: .5,
+                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            shadowColor: Theme.of(context).shadowColor,
-            elevation: 10,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomInput(
-                    controller: _medicineNameController,
-                    hintText: "Medicine Name",
-                  ),
-                  // Toggle for mode
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 10),
-                      child: _buildModeToggle()),
-                  // Display corresponding field based on selected mode
-                  _buildCustomInput(),
-                  // Other inputs (if needed)
-
-                  CustomInput(
-                    hintText: "Medicine Total Amount",
-                    controller: _totalAmountController,
-                  ),
-
-                  CustomInput(
-                      controller: _takenAmountController,
-                      hintText: "Medicine Taken Amount"),
-
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(20),
-                      side: BorderSide(
-                          color: Theme.of(context).canvasColor, width: 4),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              shadowColor: Theme.of(context).shadowColor,
+              elevation: 10,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomInput(
+                      controller: _medicineNameController,
+                      hintText: "Medicine Name",
                     ),
-                    child: const Text("Add Medicine"),
-                  )
-                ],
+                    // Toggle for mode
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 10),
+                        child: _buildModeToggle(colors)),
+
+                    // Display corresponding field based on selected mode
+                    _buildCustomInput(colors),
+                    // Other inputs (if needed)
+
+                    CustomInput(
+                      hintText: "Medicine Total Amount",
+                      controller: _totalAmountController,
+                    ),
+
+                    CustomInput(
+                        controller: _takenAmountController,
+                        hintText: "Medicine Taken Amount"),
+
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(20),
+                        backgroundColor: colors.primaryButton,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        "Add Medicine",
+                        style: TextStyle(color: colors.primaryButtonText),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

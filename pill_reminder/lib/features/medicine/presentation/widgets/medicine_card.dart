@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/custom_progress.dart';
+import 'package:provider/provider.dart';
 
 class MedicineCard extends StatelessWidget {
   final String medicineName;
@@ -38,14 +40,17 @@ class MedicineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Provider.of<ThemeProvider>(context).colors;
+
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: colors.card,
+          border: Border.all(color: colors.divider),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).hoverColor,
+              color: colors.shadow,
               spreadRadius: 2,
               blurRadius: 3,
             ),
@@ -87,11 +92,17 @@ class MedicineCard extends StatelessWidget {
                                     .titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
+                                      color: colors.text,
                                     ),
                               ),
                               Text(
                                 "8:00 AM",
-                                style: Theme.of(context).textTheme.bodyMedium,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: colors.greyText,
+                                    ),
                               ),
                             ],
                           ),
@@ -101,8 +112,7 @@ class MedicineCard extends StatelessWidget {
                             child: IconButton(
                               onPressed: onDelete,
                               icon: Icon(Icons.delete,
-                                  size: 30,
-                                  color: Theme.of(context).iconTheme.color),
+                                  size: 30, color: colors.icon),
                             ),
                           ),
                         ],
@@ -120,12 +130,15 @@ class MedicineCard extends StatelessWidget {
                             Icon(
                               Icons.pending,
                               size: 20,
-                              color: Theme.of(context).iconTheme.color,
+                              color: colors.icon,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               "Remaining $medicineRemaining",
-                              style: Theme.of(context).textTheme.bodyLarge,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: colors.greyText),
                             ),
                           ],
                         ),
@@ -134,17 +147,27 @@ class MedicineCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).iconTheme.color,
+                                  shape: BoxShape.circle,
+                                  color: colors.background,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: colors.shadow,
+                                      blurRadius: 2,
+                                    )
+                                  ]),
+                              child: Icon(
+                                Icons.done,
+                                size: 16,
+                                color: colors.icon,
                               ),
-                              child: Icon(Icons.done,
-                                  size: 16,
-                                  color: Theme.of(context).primaryColor),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               "Taken ${medicineRemaining * (100 - mecineRemainingPercent) ~/ mecineRemainingPercent}",
-                              style: Theme.of(context).textTheme.bodyLarge,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(color: colors.greyText),
                             )
                           ],
                         ),

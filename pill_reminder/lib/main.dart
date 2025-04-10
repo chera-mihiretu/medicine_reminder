@@ -2,11 +2,13 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/cores/theme/my_theme.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_screen.dart';
 import 'package:pill_reminder/injection.dart';
 import 'package:pill_reminder/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   const relaseMode = false;
@@ -27,9 +29,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          locator<MedicineBloc>(), // Replace MyBloc with your actual bloc class
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => locator<ThemeProvider>())
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Pill Reminder',

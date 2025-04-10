@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pill_reminder/cores/theme/color_hub.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomInput extends StatelessWidget {
   final TextEditingController controller;
@@ -10,11 +13,11 @@ class CustomInput extends StatelessWidget {
       required this.hintText,
       this.onTap});
 
-  OutlineInputBorder myBorder(BuildContext context) {
+  OutlineInputBorder myBorder(BuildContext context, ColorHub colors) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
       borderSide: BorderSide(
-        color: Theme.of(context).dividerColor,
+        color: colors.divider,
         width: .2,
       ),
     );
@@ -22,17 +25,25 @@ class CustomInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Provider.of<ThemeProvider>(context).colors;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
       child: TextField(
         controller: controller,
         onTap: onTap,
+        cursorColor: colors.text,
+        style: TextStyle(color: colors.text),
         decoration: InputDecoration(
-          hintText: hintText,
-          labelStyle: Theme.of(context).inputDecorationTheme.labelStyle,
-          enabledBorder: myBorder(context),
-          focusedBorder: myBorder(context),
-          hoverColor: Theme.of(context).hoverColor,
+          fillColor: colors.inputBackround,
+          hintStyle: TextStyle(color: colors.hint),
+          label: Text(
+            hintText,
+            style: TextStyle(color: colors.hint),
+          ),
+          filled: true,
+          enabledBorder: myBorder(context, colors),
+          focusedBorder: myBorder(context, colors),
+          hoverColor: colors.inputHover,
         ),
       ),
     );

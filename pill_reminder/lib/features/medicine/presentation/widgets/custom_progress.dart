@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomProgress extends StatelessWidget {
   final int percent;
@@ -8,6 +10,7 @@ class CustomProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Provider.of<ThemeProvider>(context).colors;
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       LinearProgressIndicator(
         minHeight: 10,
@@ -24,8 +27,12 @@ class CustomProgress extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(percent == 100 ? 'Completed' : 'In progress',
-              style: Theme.of(context).textTheme.bodyLarge),
+          Text(
+            percent == 100 ? 'Completed' : 'In progress',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: colors.text,
+                ),
+          ),
           Text(
             "$percent%",
             style: TextStyle(

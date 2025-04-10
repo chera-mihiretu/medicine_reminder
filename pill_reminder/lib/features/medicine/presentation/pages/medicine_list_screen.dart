@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/medicine_card.dart';
+import 'package:provider/provider.dart';
 
 class MedicineListScreen extends StatelessWidget {
   static const routeName = '/medicine-list';
@@ -8,42 +10,45 @@ class MedicineListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Provider.of<ThemeProvider>(context).colors;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
             "Medicine List",
-            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 20, color: colors.text),
           ),
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: colors.background,
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).pushNamed(AddMedicinePage.router);
           },
-          backgroundColor: Colors.blue,
+          backgroundColor: colors.primaryButton,
           shape: const CircleBorder(),
           child: Icon(
             Icons.add,
-            color: Theme.of(context).primaryColor,
+            color: colors.primaryIcon,
           ),
         ),
         body: SafeArea(
           child: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: 10, // Replace with your actual item count
-                  itemBuilder: (context, index) {
-                    return MedicineCard(
-                      medicineName: "Cloxa",
-                      mecineRemainingPercent: (index * 46) % 100 + 1,
-                      medicineRemaining: 12,
-                      onDelete: () {},
-                    );
-                  },
+                child: Container(
+                  decoration: BoxDecoration(color: colors.background),
+                  child: ListView.builder(
+                    itemCount: 10, // Replace with your actual item count
+                    itemBuilder: (context, index) {
+                      return MedicineCard(
+                        medicineName: "Cloxa",
+                        mecineRemainingPercent: (index * 46) % 100 + 1,
+                        medicineRemaining: 12,
+                        onDelete: () {},
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
