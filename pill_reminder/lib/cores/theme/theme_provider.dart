@@ -3,7 +3,7 @@ import 'package:pill_reminder/cores/theme/color_data.dart';
 import 'package:pill_reminder/cores/theme/color_hub.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ColorMode mode = ColorMode.DARK;
+  ColorMode mode = ColorMode.LIGHT;
   ColorType type = ColorType.PRIMARY;
 
   ThemeProvider({required this.mode, required this.type});

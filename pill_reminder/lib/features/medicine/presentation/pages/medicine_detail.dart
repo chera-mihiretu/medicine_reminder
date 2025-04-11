@@ -8,9 +8,6 @@ class MedicineDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final medicineName =
-        ModalRoute.of(context)?.settings.arguments as String? ??
-            'Unknown Medicine';
     final colors = Provider.of<ThemeProvider>(context).colors;
     return Scaffold(
       backgroundColor: colors.background,
@@ -44,11 +41,98 @@ class MedicineDetail extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Center(
-                child: Text(
-                  medicineName,
-                  style: TextStyle(color: colors.text),
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              color: colors.error,
+                              borderRadius: BorderRadius.circular(20)),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Icon(
+                            Icons.health_and_safety,
+                            size: 80,
+                            color: colors.icon,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5.0),
+                          decoration: BoxDecoration(
+                            color: colors.primaryButton,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Active',
+                            style: TextStyle(color: colors.text),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    'Amoxa',
+                    style: TextStyle(
+                        color: colors.text,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: colors.primaryButton,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'Antibiotics',
+                      style: TextStyle(color: colors.text),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Course Progress',
+                          style: TextStyle(
+                            color: colors.greyText,
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Text(
+                          '9 Days',
+                          style: TextStyle(
+                            color: colors.primaryButton,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: LinearProgressIndicator(
+                      value: 0.7,
+                      backgroundColor: colors.greyText,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        colors.primaryButton,
+                      ),
+                      minHeight: 10,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ],
               ),
             ),
           )
