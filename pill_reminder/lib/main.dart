@@ -1,10 +1,9 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/cores/theme/my_theme.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
-import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_screen.dart';
 import 'package:pill_reminder/injection.dart';
 import 'package:pill_reminder/splash_screen.dart';
@@ -43,7 +42,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => const SplashScreen(),
           MedicineListScreen.routeName: (context) => const MedicineListScreen(),
-          AddMedicinePage.router: (context) => const AddMedicinePage(),
+          AddMedicinePage.router: (context) => AddMedicinePage(),
+          MedicineDetail.routeName: (context) => const MedicineDetail(),
           // Add other routes here
         },
       ),

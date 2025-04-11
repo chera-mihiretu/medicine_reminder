@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/medicine_card.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,11 @@ class MedicineListScreen extends StatelessWidget {
                     itemCount: 10, // Replace with your actual item count
                     itemBuilder: (context, index) {
                       return MedicineCard(
+                        onDetail: () {
+                          Navigator.of(context).pushNamed(
+                            MedicineDetail.routeName,
+                          );
+                        },
                         medicineName: "Cloxa",
                         mecineRemainingPercent: (index * 46) % 100 + 1,
                         medicineRemaining: 12,
