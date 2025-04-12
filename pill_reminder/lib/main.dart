@@ -1,6 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
-import 'package:pill_reminder/cores/theme/my_theme.dart';
+import 'package:pill_reminder/cores/theme/color_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
@@ -35,9 +35,21 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Pill Reminder',
-        theme: MyTheme.lightTheme,
-        darkTheme: MyTheme.darkTheme,
-        themeMode: ThemeMode.light,
+        builder: (context, child) {
+          final brightness = MediaQuery.of(context).platformBrightness;
+          final themeProvider =
+              Provider.of<ThemeProvider>(context, listen: false);
+
+          if (brightness == Brightness.dark &&
+              themeProvider.colorMode != ColorMode.DARK) {
+            themeProvider.setColorMode(ColorMode.DARK);
+          } else if (brightness == Brightness.light &&
+              themeProvider.colorMode != ColorMode.LIGHT) {
+            themeProvider.setColorMode(ColorMode.LIGHT);
+          }
+
+          return child!;
+        },
         initialRoute: '/',
         routes: {
           '/': (context) => const SplashScreen(),

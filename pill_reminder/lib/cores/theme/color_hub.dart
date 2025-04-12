@@ -25,6 +25,8 @@ class ColorHub extends Equatable {
         ContentColor.ICON_COLOR: const Color(0xFFFAFAFA),
         ContentColor.PRIMARY_ICON_COLOR: const Color(0xFFFAFAFA),
         ContentColor.CARD_COLOR: const Color.fromARGB(255, 31, 33, 39),
+        ContentColor.INTERNAL_CARD: const Color.fromARGB(255, 40, 42, 50),
+
         ContentColor.DIVIDER_COLOR: const Color.fromARGB(255, 65, 60, 60),
         ContentColor.ERROR_COLOR: const Color(0xFFDC2626),
         ContentColor.SUCCESS_COLOR: const Color(0xFF059669),
@@ -36,6 +38,9 @@ class ColorHub extends Equatable {
         ContentColor.SHADOW_COLOR: const Color.fromARGB(255, 21, 26, 34),
         ContentColor.INPUT_BACKROUND: const Color(0xFF424242),
         ContentColor.INPUT_HOVER: const Color(0xFF616161),
+        ContentColor.PROGRESS_COLOR: const Color.fromARGB(255, 0, 119, 255),
+        ContentColor.PROGRESS_BACKGROUND_COLOR:
+            const Color.fromARGB(255, 50, 50, 50),
       },
       ColorMode.LIGHT: {
         ContentColor.BACKGROUND_COLOR: const Color(0xFFFAFAFA),
@@ -48,6 +53,7 @@ class ColorHub extends Equatable {
         ContentColor.ICON_COLOR: const Color(0xFF2A2A2B),
         ContentColor.PRIMARY_ICON_COLOR: const Color(0xFFFAFAFA),
         ContentColor.CARD_COLOR: const Color(0xFFFAFAFA),
+        ContentColor.INTERNAL_CARD: const Color.fromARGB(255, 213, 213, 213),
         ContentColor.DIVIDER_COLOR: const Color.fromARGB(255, 172, 172, 172),
         ContentColor.ERROR_COLOR: const Color(0xFFDC2626),
         ContentColor.SUCCESS_COLOR: const Color(0xFF059669),
@@ -59,6 +65,9 @@ class ColorHub extends Equatable {
         ContentColor.SHADOW_COLOR: const Color.fromARGB(255, 223, 223, 223),
         ContentColor.INPUT_BACKROUND: const Color(0xFFFFFFFF),
         ContentColor.INPUT_HOVER: const Color(0xFFEEEEEE),
+        ContentColor.PROGRESS_COLOR: const Color.fromARGB(255, 0, 119, 255),
+        ContentColor.PROGRESS_BACKGROUND_COLOR:
+            const Color.fromARGB(255, 226, 232, 240),
       }
     }
   };
@@ -90,6 +99,11 @@ class ColorHub extends Equatable {
   Color get inputBackround =>
       colors[type]![mode]![ContentColor.INPUT_BACKROUND]!;
   Color get inputHover => colors[type]![mode]![ContentColor.INPUT_HOVER]!;
+
+  Color get progressColor => colors[type]![mode]![ContentColor.PROGRESS_COLOR]!;
+  Color get progressBackground =>
+      colors[type]![mode]![ContentColor.PROGRESS_BACKGROUND_COLOR]!;
+  Color get internalCard => colors[type]![mode]![ContentColor.INTERNAL_CARD]!;
 
   @override
   List<Object?> get props => [mode, type];
