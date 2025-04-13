@@ -1,0 +1,1 @@
+enum MedicineMode { interval, specificTime }
