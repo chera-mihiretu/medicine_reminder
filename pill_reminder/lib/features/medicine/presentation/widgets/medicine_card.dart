@@ -5,24 +5,21 @@ import 'package:provider/provider.dart';
 
 class MedicineCard extends StatelessWidget {
   final String medicineName;
-  final int mecineRemainingPercent;
   final int medicineRemaining;
+  final int totalMedicine;
 
   final Map<int, Color> colorMap = {
     0: Colors.red,
     25: Colors.orange,
-    50: Colors.yellow,
     75: Colors.green,
     100: Colors.blue,
   };
 
   Color getColor(int percent) {
-    if (percent <= 25) {
+    if (percent <= 33) {
       return colorMap[0]!;
-    } else if (percent <= 50) {
-      return colorMap[25]!;
     } else if (percent <= 75) {
-      return colorMap[50]!;
+      return colorMap[25]!;
     } else if (percent <= 100) {
       return colorMap[75]!;
     }
@@ -35,9 +32,9 @@ class MedicineCard extends StatelessWidget {
     super.key,
     required this.onDetail,
     required this.medicineName,
-    required this.mecineRemainingPercent,
     required this.medicineRemaining,
     required this.onDelete,
+    required this.totalMedicine,
   });
 
   @override
@@ -74,25 +71,31 @@ class MedicineCard extends StatelessWidget {
                               height: 60,
                               decoration: BoxDecoration(
                                 color: getColor(
-                                  mecineRemainingPercent,
+                                  (((totalMedicine - medicineRemaining) *
+                                          100) ~/
+                                      totalMedicine),
                                 ).withValues(alpha: 0.3),
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Icon(
                                 Icons.medical_services_rounded,
                                 size: 40,
-                                color: getColor(mecineRemainingPercent),
+                                color: getColor(
+                                  ((totalMedicine - medicineRemaining) * 100) ~/
+                                      totalMedicine,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   medicineName,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.normal,
                                     color: colors.text,
                                   ),
                                 ),
@@ -110,12 +113,17 @@ class MedicineCard extends StatelessWidget {
                                 onPressed: onDelete,
                                 icon: Icon(
                                   Icons.delete,
-                                  size: 30,
+                                  size: 25,
                                   color: colors.icon,
                                 ),
                               ),
                             ),
                           ],
+                        ),
+                        Container(
+                          height: .4,
+                          margin: EdgeInsets.symmetric(horizontal: 50),
+                          decoration: BoxDecoration(color: colors.divider),
                         ),
                         const SizedBox(height: 4),
                       ],
@@ -158,7 +166,7 @@ class MedicineCard extends StatelessWidget {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                "Taken ${medicineRemaining * (100 - mecineRemainingPercent) ~/ mecineRemainingPercent}",
+                                "Taken ${totalMedicine - medicineRemaining}",
                                 style: Theme.of(context).textTheme.bodyLarge
                                     ?.copyWith(color: colors.greyText),
                               ),
@@ -170,8 +178,13 @@ class MedicineCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: CustomProgress(
-                        percent: mecineRemainingPercent,
-                        color: getColor(mecineRemainingPercent),
+                        percent:
+                            ((totalMedicine - medicineRemaining) * 100) ~/
+                            totalMedicine,
+                        color: getColor(
+                          ((totalMedicine - medicineRemaining) * 100) ~/
+                              totalMedicine,
+                        ),
                       ),
                     ),
                   ],

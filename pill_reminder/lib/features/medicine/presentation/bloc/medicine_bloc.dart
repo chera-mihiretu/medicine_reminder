@@ -11,6 +11,7 @@ import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_state
 class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
   final GetAllMedicineUsecase getAllMedicineUsecase;
   final GetMadicineUsecase getMadicineUsecase;
+
   final AddMedicineUsecase addMedicineUseCase;
   final DeleteMedicineUsecase deleteMedicineUsecase;
   final UpdateMedicineUsecase updateMedicineUsecase;
@@ -26,41 +27,29 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
 
       final result = await getAllMedicineUsecase.execute();
 
-      result.fold(
-        (failure) => emit(MedicineErrorState(failure.message)),
-        (medicines) {
-          Map<String, MedicineEntity> medicineModels = {};
-          for (var m in medicines) {
-            medicineModels[m.medicineId] = m;
-          }
-          emit(MedicineLoadedState(medicineModels));
-        },
-      );
+      result.fold((failure) => emit(MedicineErrorState(failure.message)), (
+        medicines,
+      ) {
+        emit(MedicineLoadedState(medicines));
+      });
     });
 
     on<GetMedicineEvent>((event, emit) async {
       emit(MedicineLoadingState());
       final result = await getMadicineUsecase.execute(event.medicineId);
 
-      result.fold(
-        (failure) => emit(MedicineErrorState(failure.message)),
-        (medicine) {
-          emit(MedicineLoadedState({medicine.medicineId: medicine}));
-        },
-      );
+      result.fold((failure) => emit(MedicineErrorState(failure.message)), (
+        medicine,
+      ) {
+        emit(MedicineLoadedState([medicine]));
+      });
     });
 
     on<AddMedicineEvent>((event, emit) async {
-      final MedicineLoadedState loadedState;
-      if (state is MedicineLoadedState) {
-        loadedState = state as MedicineLoadedState;
-      } else {
-        loadedState = const MedicineLoadedState({});
-      }
       emit(MedicineLoadingState());
 
       final medicine = MedicineEntity(
-        medicineId: "",
+        medicineId: DateTime.now().millisecondsSinceEpoch.toString(),
         name: event.name,
         interval: event.interval,
         time: event.time,
@@ -69,13 +58,12 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         medicineTaken: event.medicineTaken,
         lastTriggered: event.lastTriggered,
       );
-
       final result = await addMedicineUseCase.execute(medicine);
 
-      result.fold((failure) => emit(MedicineErrorState(failure.message)),
-          (status) {
-        loadedState.medicines[medicine.medicineId] = medicine;
-        emit(MedicineLoadedState(loadedState.medicines));
+      result.fold((failure) => emit(MedicineErrorState(failure.message)), (
+        status,
+      ) {
+        emit(MedicineAddedState());
       });
     });
     on<UpdataeMedicineEvent>((event, emit) async {
@@ -83,7 +71,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = const MedicineLoadedState({});
+        loadedState = MedicineLoadedState([]);
       }
 
       emit(MedicineLoadingState());
@@ -101,32 +89,37 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
 
       final result = await updateMedicineUsecase.execute(medicine);
 
-      result.fold(
-        (failure) => emit(MedicineErrorState(failure.message)),
-        (status) {
-          loadedState.medicines[event.medicineId] = medicine;
-          emit(MedicineLoadedState(loadedState.medicines));
-        },
-      );
+      result.fold((failure) => emit(MedicineErrorState(failure.message)), (
+        status,
+      ) {
+        loadedState.medicines.add(medicine);
+        emit(MedicineLoadedState(loadedState.medicines));
+      });
     });
+
     on<DeleteMedicineEvent>((event, emit) async {
       final MedicineLoadedState loadedState;
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = const MedicineLoadedState({});
+        loadedState = const MedicineLoadedState([]);
       }
+
       emit(MedicineLoadingState());
 
       final result = await deleteMedicineUsecase.execute(event.medicineId);
 
-      result.fold(
-        (failure) => emit(MedicineErrorState(failure.message)),
-        (status) {
-          loadedState.medicines.remove(event.medicineId);
-          emit(MedicineLoadedState(loadedState.medicines));
-        },
-      );
+      result.fold((failure) => emit(MedicineErrorState(failure.message)), (
+        status,
+      ) {
+        for (int i = 0; i < loadedState.medicines.length; ++i) {
+          if (loadedState.medicines[i].medicineId == event.medicineId) {
+            loadedState.medicines.removeAt(i);
+            break;
+          }
+        }
+        emit(MedicineLoadedState(loadedState.medicines));
+      });
     });
   }
 }

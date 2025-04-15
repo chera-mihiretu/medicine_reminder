@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
@@ -17,7 +19,7 @@ class MedicineLocalDataSourceImpl extends MedicineLocalDataSource {
   @override
   Future<bool> addMedicine(MedicineModel medicine) async {
     try {
-      medicineStorage.put(medicine.medicineId, medicine);
+      await medicineStorage.put(medicine.medicineId, medicine);
     } catch (e) {
       throw CacheFailure(message: e.toString());
     }
@@ -42,15 +44,13 @@ class MedicineLocalDataSourceImpl extends MedicineLocalDataSource {
 
   @override
   Future<List<MedicineModel>> getMedicines() async {
+    log(medicineStorage.isOpen.toString());
     try {
       final List<MedicineModel> data = medicineStorage.values.toList();
-      if (data.isEmpty) {
-        throw const CacheFailure(message: "Data not found");
-      } else {
-        return data;
-      }
+      log(data.toString());
+      return data;
     } catch (e) {
-      throw CacheFailure(message: e.toString());
+      throw CacheFailure(message: (e as Failure).message);
     }
   }
 

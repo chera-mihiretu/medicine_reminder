@@ -10,10 +10,12 @@ sealed class MedicineState extends Equatable {
 
 class MedicineInitialState extends MedicineState {}
 
+class MedicineAddedState extends MedicineState {}
+
 class MedicineLoadingState extends MedicineState {}
 
 class MedicineLoadedState extends MedicineState {
-  final Map<String, MedicineEntity> medicines;
+  final List<MedicineEntity> medicines;
 
   const MedicineLoadedState(this.medicines);
 

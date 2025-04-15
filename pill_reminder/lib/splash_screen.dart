@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
+import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_event.dart';
 import 'dart:async';
 
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_screen.dart';
@@ -17,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(milliseconds: 1), () {
+      BlocProvider.of<MedicineBloc>(context).add(GetMedicineListEvent());
       Navigator.of(context).pushReplacementNamed(MedicineListScreen.routeName);
     });
   }
@@ -34,8 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
               fit: BoxFit.fill,
             ),
             const SizedBox(height: 20),
-            Text('Pill Reminder',
-                style: Theme.of(context).textTheme.displayLarge),
+            Text(
+              'Pill Reminder',
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
           ],
         ),
       ),

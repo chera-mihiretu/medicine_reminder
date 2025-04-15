@@ -25,11 +25,11 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
       final nowInMinutes = currentTime.hour * 60 + currentTime.minute;
 
       for (MedicineEntity medicine in medicines) {
-        if (medicine.interval != -1) {
+        if (medicine.interval != null) {
           TimeOfDay last = medicine.lastTriggered;
           final lastInMinutes = last.hour * 60 + last.minute;
           final diff = nowInMinutes - lastInMinutes;
-          final remainingTime = medicine.interval - diff;
+          final remainingTime = medicine.interval! - diff;
           if (remainingTime > 0 && remainingTime <= 10) {
             NotificationEntity notification = NotificationEntity(
               id: DateTime.now().millisecondsSinceEpoch,
@@ -54,7 +54,7 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
             );
           }
         } else {
-          for (var time in medicine.time) {
+          for (var time in medicine.time!) {
             final scheduledMinutes = time.hour * 60 + time.minute;
             int difference = scheduledMinutes - nowInMinutes;
             if (difference <= 10) {
@@ -95,11 +95,11 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
       final nowInMinutes = currentTime.hour * 60 + currentTime.minute;
 
       for (MedicineEntity medicine in medicines) {
-        if (medicine.interval != -1) {
+        if (medicine.interval != null) {
           TimeOfDay last = medicine.lastTriggered;
           final lastInMinutes = last.hour * 60 + last.minute;
           final diff = nowInMinutes - lastInMinutes;
-          final remainingTime = medicine.interval - diff;
+          final remainingTime = medicine.interval! - diff;
           if (remainingTime > 0 && remainingTime >= 10 && remainingTime <= 20) {
             NotificationEntity notification = NotificationEntity(
               id: DateTime.now().millisecondsSinceEpoch,
@@ -124,7 +124,7 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
             );
           }
         } else {
-          for (var time in medicine.time) {
+          for (var time in medicine.time!) {
             final scheduledMinutes = time.hour * 60 + time.minute;
             int difference = scheduledMinutes - nowInMinutes;
             if (difference < 20 && difference > 10) {

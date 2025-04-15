@@ -20,12 +20,12 @@ class MedicineModel extends MedicineEntity {
   @override
   @HiveField(2)
   // ignore: overridden_fields
-  final int interval;
+  final int? interval;
 
   @override
   @HiveField(3)
   // ignore: overridden_fields
-  final List<TimeOfDay> time;
+  final List<TimeOfDay>? time;
 
   @override
   @HiveField(4)
@@ -47,24 +47,25 @@ class MedicineModel extends MedicineEntity {
   // ignore: overridden_fields
   final TimeOfDay lastTriggered;
 
-  const MedicineModel(
-      {required this.medicineId,
-      required this.name,
-      required this.interval,
-      required this.time,
-      required this.startDate,
-      required this.medicineAmount,
-      required this.medicineTaken,
-      required this.lastTriggered})
-      : super(
-            medicineId: medicineId,
-            name: name,
-            interval: interval,
-            time: time,
-            startDate: startDate,
-            medicineAmount: medicineAmount,
-            medicineTaken: medicineTaken,
-            lastTriggered: lastTriggered);
+  const MedicineModel({
+    required this.medicineId,
+    required this.name,
+    this.interval,
+    this.time,
+    required this.startDate,
+    required this.medicineAmount,
+    required this.medicineTaken,
+    required this.lastTriggered,
+  }) : super(
+         medicineId: medicineId,
+         name: name,
+         interval: interval,
+         time: time,
+         startDate: startDate,
+         medicineAmount: medicineAmount,
+         medicineTaken: medicineTaken,
+         lastTriggered: lastTriggered,
+       );
 
   factory MedicineModel.fromJson(Map<String, dynamic> json) {
     return MedicineModel(
@@ -72,9 +73,7 @@ class MedicineModel extends MedicineEntity {
       name: json['name'],
       interval: json['interval'],
       time: json['time'],
-      startDate: DateTime.parse(
-        json['startDate'],
-      ),
+      startDate: DateTime.parse(json['startDate']),
       medicineAmount: json['medicineAmount'],
       medicineTaken: json['medicineTaken'],
       lastTriggered: json['lastTriggered'],
@@ -103,19 +102,20 @@ class MedicineModel extends MedicineEntity {
       'startDate': startDate.toIso8601String(),
       'medicineAmount': medicineAmount,
       'medicineTaken': medicineTaken,
-      'lastTriggered': lastTriggered
+      'lastTriggered': lastTriggered,
     };
   }
 
   MedicineEntity toEntity() {
     return MedicineEntity(
-        medicineId: medicineId,
-        name: name,
-        interval: interval,
-        time: time,
-        startDate: startDate,
-        medicineAmount: medicineAmount,
-        medicineTaken: medicineTaken,
-        lastTriggered: lastTriggered);
+      medicineId: medicineId,
+      name: name,
+      interval: interval,
+      time: time,
+      startDate: startDate,
+      medicineAmount: medicineAmount,
+      medicineTaken: medicineTaken,
+      lastTriggered: lastTriggered,
+    );
   }
 }

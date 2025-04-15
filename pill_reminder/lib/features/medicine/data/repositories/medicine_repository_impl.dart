@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
@@ -15,6 +17,7 @@ class MedicineRepositoryImpl extends MedicineRepository {
     try {
       MedicineModel medicineModel = MedicineModel.fromEntity(medicine);
       bool added = await localDataSource.addMedicine(medicineModel);
+
       return Right(added);
     } catch (e) {
       return Left(CacheFailure(message: e.toString()));
@@ -46,17 +49,19 @@ class MedicineRepositoryImpl extends MedicineRepository {
   Future<Either<Failure, List<MedicineEntity>>> getMedicines() async {
     try {
       final List<MedicineModel> result = await localDataSource.getMedicines();
+      log(result.toString());
       return Right(result.map((e) => e.toEntity()).toList());
     } catch (e) {
-      return Left(CacheFailure(message: e.toString()));
+      return Left(CacheFailure(message: (e as Failure).message));
     }
   }
 
   @override
   Future<Either<Failure, bool>> updateMedicine(MedicineEntity medicine) async {
     try {
-      final result = await localDataSource
-          .updateMedicine(MedicineModel.fromEntity(medicine));
+      final result = await localDataSource.updateMedicine(
+        MedicineModel.fromEntity(medicine),
+      );
       return Right(result);
     } catch (e) {
       return Left(CacheFailure(message: e.toString()));

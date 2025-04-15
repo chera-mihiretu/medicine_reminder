@@ -2,25 +2,24 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class MedicineEntity extends Equatable {
-  @override
-  List<Object> get props => [medicineId, name, interval, time, startDate];
   final String medicineId;
   final String name;
-  final int interval;
-  final List<TimeOfDay> time;
+  final int? interval;
+  final List<TimeOfDay>? time;
   final DateTime startDate;
   final int medicineAmount;
   final int medicineTaken;
   final TimeOfDay lastTriggered;
-  const MedicineEntity(
-      {required this.medicineId,
-      required this.name,
-      required this.interval,
-      required this.time,
-      required this.startDate,
-      required this.medicineAmount,
-      required this.medicineTaken,
-      required this.lastTriggered});
+  const MedicineEntity({
+    required this.medicineId,
+    required this.name,
+    required this.interval,
+    required this.time,
+    required this.startDate,
+    required this.medicineAmount,
+    required this.medicineTaken,
+    required this.lastTriggered,
+  });
 
   @override
   bool operator ==(Object other) {
@@ -41,4 +40,6 @@ class MedicineEntity extends Equatable {
       interval.hashCode ^
       time.hashCode ^
       startDate.hashCode;
+  @override
+  List<dynamic> get props => [medicineId, name, interval, time, startDate];
 }

@@ -19,8 +19,8 @@ class MedicineModelAdapter extends TypeAdapter<MedicineModel> {
     return MedicineModel(
       medicineId: fields[0] as String,
       name: fields[1] as String,
-      interval: fields[2] as int,
-      time: (fields[3] as List).cast<TimeOfDay>(),
+      interval: fields[2] as int?,
+      time: (fields[3] as List?)?.cast<TimeOfDay>(),
       startDate: fields[4] as DateTime,
       medicineAmount: fields[5] as int,
       medicineTaken: fields[6] as int,

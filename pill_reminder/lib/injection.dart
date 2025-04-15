@@ -1,9 +1,11 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pill_reminder/cores/constants/app_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
 import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pill_reminder/features/medicine/data/models/time_of_day_adapter.dart';
 import 'package:pill_reminder/features/medicine/data/repositories/medicine_repository_impl.dart';
 import 'package:pill_reminder/features/medicine/domain/repositories/medicine_repository.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/add_medicine_usecase.dart';
@@ -11,6 +13,7 @@ import 'package:pill_reminder/features/medicine/domain/usecases/delete_medicine_
 import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/get_madicine_usecase.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/update_medicine_usecase.dart';
+import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/notification/data/repositories/notification_repository_impl.dart';
 import 'package:pill_reminder/features/notification/data/repositories/trigger_notification_repository_impl.dart';
 import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart';
@@ -19,33 +22,48 @@ import 'package:pill_reminder/features/notification/domain/usecases/show_full_sc
 import 'package:pill_reminder/features/notification/domain/usecases/show_notification_usecase.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/trigger_notification_ten_minute_before_usecase.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/trigger_notification_usecase.dart';
+import 'package:pill_reminder/features/notification/services/background_task.dart';
 
 final locator = GetIt.instance;
 
 Future<void> init() async {
   //! THeme provider
-  locator
-      .registerLazySingleton<ThemeProvider>(() => ThemeProvider.withDefaults());
+  locator.registerLazySingleton<ThemeProvider>(
+    () => ThemeProvider.withDefaults(),
+  );
   //! Hive Initialization and Registration
   await Hive.initFlutter();
   Hive.registerAdapter(MedicineModelAdapter());
+  Hive.registerAdapter(TimeOfDayAdapter());
   final medicineBox = await Hive.openBox<MedicineModel>(AppData.medicineBox);
   locator.registerLazySingleton<Box<MedicineModel>>(() => medicineBox);
-
+  //! local data source
+  locator.registerLazySingleton<MedicineLocalDataSource>(
+    () => MedicineLocalDataSourceImpl(
+      medicineStorage: locator<Box<MedicineModel>>(),
+    ),
+  );
   //! Flutter Local Notifications Plugin Initialization
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   locator.registerLazySingleton<FlutterLocalNotificationsPlugin>(
-      () => flutterLocalNotificationsPlugin);
+    () => flutterLocalNotificationsPlugin,
+  );
 
   //! Repository Registration
   locator.registerLazySingleton<MedicineRepository>(
-      () => MedicineRepositoryImpl(localDataSource: locator()));
-  locator.registerLazySingleton<NotificationRepository>(() =>
-      NotificationRepositoryImpl(flutterLocalNotificationsPlugin: locator()));
-  locator.registerLazySingleton<TriggerNotificationRepository>(() =>
-      TriggerNotificationRepositoryImpl(
-          getAllMedicineUsecase: locator(), notificationRepository: locator()));
+    () => MedicineRepositoryImpl(localDataSource: locator()),
+  );
+  locator.registerLazySingleton<NotificationRepository>(
+    () =>
+        NotificationRepositoryImpl(flutterLocalNotificationsPlugin: locator()),
+  );
+  locator.registerLazySingleton<TriggerNotificationRepository>(
+    () => TriggerNotificationRepositoryImpl(
+      getAllMedicineUsecase: locator(),
+      notificationRepository: locator(),
+    ),
+  );
 
   //! Usecase Registration
   locator.registerLazySingleton(() => AddMedicineUsecase(locator()));
@@ -54,10 +72,35 @@ Future<void> init() async {
   locator.registerLazySingleton(() => GetAllMedicineUsecase(locator()));
   locator.registerLazySingleton(() => GetMadicineUsecase(locator()));
   locator.registerLazySingleton(
-      () => ShowFullScreenNotificationUsecase(locator()));
+    () => ShowFullScreenNotificationUsecase(locator()),
+  );
   locator.registerLazySingleton(() => ShowNotificationUsecase(locator()));
-  locator.registerLazySingleton(() =>
-      TriggerNotificationUsecase(triggerNotificationRepository: locator()));
-  locator.registerLazySingleton(() => TriggerNotificationTenMinuteBeforeUsecase(
-      triggerNotificationRepository: locator()));
+  locator.registerLazySingleton(
+    () => TriggerNotificationUsecase(triggerNotificationRepository: locator()),
+  );
+  locator.registerLazySingleton(
+    () => TriggerNotificationTenMinuteBeforeUsecase(
+      triggerNotificationRepository: locator(),
+    ),
+  );
+
+  //! Backround task
+
+  locator.registerLazySingleton(
+    () => BackgroundTask(
+      getAllMedicineUsecase: locator(),
+      showNotificationUsecase: locator(),
+    ),
+  );
+
+  //! Bloc registration
+  locator.registerLazySingleton(
+    () => MedicineBloc(
+      getAllMedicineUsecase: locator(),
+      getMadicineUsecase: locator(),
+      addMedicineUseCase: locator(),
+      deleteMedicineUsecase: locator(),
+      updateMedicineUsecase: locator(),
+    ),
+  );
 }
