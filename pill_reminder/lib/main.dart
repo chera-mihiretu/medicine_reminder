@@ -39,23 +39,23 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Pill Reminder',
-          builder: (context, child) {
-            final brightness = MediaQuery.of(context).platformBrightness;
-            final themeProvider = Provider.of<ThemeProvider>(
-              context,
-              listen: false,
-            );
+          // builder: (context, child) {
+          //   final brightness = MediaQuery.of(context).platformBrightness;
+          //   final themeProvider = Provider.of<ThemeProvider>(
+          //     context,
+          //     listen: false,
+          //   );
 
-            if (brightness == Brightness.dark &&
-                themeProvider.colorMode != ColorMode.DARK) {
-              themeProvider.setColorMode(ColorMode.DARK);
-            } else if (brightness == Brightness.light &&
-                themeProvider.colorMode != ColorMode.LIGHT) {
-              themeProvider.setColorMode(ColorMode.LIGHT);
-            }
+          //   if (brightness == Brightness.dark &&
+          //       themeProvider.colorMode != ColorMode.DARK) {
+          //     themeProvider.setColorMode(ColorMode.DARK);
+          //   } else if (brightness == Brightness.light &&
+          //       themeProvider.colorMode != ColorMode.LIGHT) {
+          //     themeProvider.setColorMode(ColorMode.LIGHT);
+          //   }
 
-            return child!;
-          },
+          //   return child!;
+          // },
           initialRoute: '/',
           routes: {
             '/': (context) => const SplashScreen(),
