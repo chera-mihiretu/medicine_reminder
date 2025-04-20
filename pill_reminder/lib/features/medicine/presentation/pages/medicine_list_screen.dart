@@ -7,6 +7,7 @@ import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_event.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_state.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/medicine_card.dart';
 import 'package:provider/provider.dart';
 
@@ -63,9 +64,11 @@ class MedicineListScreen extends StatelessWidget {
                           log(medicine.toString());
                           return MedicineCard(
                             onDetail: () {
-                              // Navigator.of(
-                              //   context,
-                              // ).pushNamed(MedicineDetail.routeName);
+                              Navigator.of(context).pushNamed(
+                                MedicineDetail.routeName,
+                                arguments:
+                                    index, // Pass your medicine object here
+                              );
                             },
                             medicineName: medicine.name,
                             totalMedicine: medicine.medicineAmount,
