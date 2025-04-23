@@ -143,7 +143,11 @@ class MedicineDetail extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(16),
                             child: LinearProgressIndicator(
-                              value: 0.7,
+                              value:
+                                  ((state.medicines[index].medicineTaken *
+                                          100) /
+                                      state.medicines[index].medicineAmount) /
+                                  100,
                               backgroundColor: colors.progressBackground,
                               valueColor: AlwaysStoppedAnimation<Color>(
                                 colors.progressColor,
@@ -179,7 +183,8 @@ class MedicineDetail extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          '20',
+                                          state.medicines[index].medicineAmount
+                                              .toString(),
                                           style: TextStyle(
                                             color: colors.text,
                                             fontSize: 48,
@@ -235,7 +240,15 @@ class MedicineDetail extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          '15',
+                                          ((state
+                                                          .medicines[index]
+                                                          .medicineAmount -
+                                                      state
+                                                          .medicines[index]
+                                                          .medicineTaken) ~/
+                                                  3)
+                                              .toString()
+                                              .toString(),
                                           style: TextStyle(
                                             color: colors.text,
                                             fontSize: 48,
@@ -346,9 +359,7 @@ class MedicineDetail extends StatelessWidget {
                         const SizedBox(width: 10),
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {
-                              // Add your action here
-                            },
+                            onPressed: () {},
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 20),
                               shape: RoundedRectangleBorder(
