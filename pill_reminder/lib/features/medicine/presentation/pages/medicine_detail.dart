@@ -30,6 +30,7 @@ class MedicineDetail extends StatelessWidget {
       body: BlocBuilder<MedicineBloc, MedicineState>(
         builder: (context, state) {
           if (state is MedicineLoadedState) {
+            final medicine = state.medicines[index];
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -40,7 +41,6 @@ class MedicineDetail extends StatelessWidget {
                       color: colors.card,
                       shadowColor: colors.shadow,
                       elevation: 5,
-
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -92,34 +92,17 @@ class MedicineDetail extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            state.medicines[index].name,
+                            medicine.name,
                             style: TextStyle(
                               color: colors.text,
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Container(
-                            margin: const EdgeInsets.all(16),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 5.0,
-                              horizontal: 20,
-                            ),
-                            decoration: BoxDecoration(
-                              color: colors.primaryButton,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              state.medicines[index].interval != null
-                                  ? 'Interval: ${state.medicines[index].interval} hours'
-                                  : 'Specific Times',
-                              style: TextStyle(color: colors.primaryButtonText),
-                            ),
-                          ),
+                          const SizedBox(height: 20),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16.0,
-                              vertical: 5,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +116,7 @@ class MedicineDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${DateTime.now().difference(state.medicines[index].startDate).inDays} Days',
+                                  '${DateTime.now().difference(medicine.startDate).inDays} Days',
                                   style: TextStyle(
                                     color: colors.primaryButton,
                                     fontSize: 16,
@@ -147,9 +130,8 @@ class MedicineDetail extends StatelessWidget {
                             padding: const EdgeInsets.all(16),
                             child: LinearProgressIndicator(
                               value:
-                                  ((state.medicines[index].medicineTaken *
-                                          100) /
-                                      state.medicines[index].medicineAmount) /
+                                  (medicine.medicineTaken * 100) /
+                                  medicine.medicineAmount /
                                   100,
                               backgroundColor: colors.progressBackground,
                               valueColor: AlwaysStoppedAnimation<Color>(
@@ -159,132 +141,6 @@ class MedicineDetail extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    color: colors.internalCard,
-                                    elevation: 10,
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 10.0,
-                                          ),
-                                          child: Text(
-                                            'Remaining pills',
-                                            style: TextStyle(
-                                              color: colors.text,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          state.medicines[index].medicineAmount
-                                              .toString(),
-                                          style: TextStyle(
-                                            color: colors.text,
-                                            fontSize: 48,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 15.0,
-                                            horizontal: 8.0,
-                                          ),
-                                          child: LinearProgressIndicator(
-                                            value: 0.5,
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                            backgroundColor:
-                                                colors.progressBackground,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                  colors.progressColor,
-                                                ),
-                                            minHeight: 5,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    color: colors.internalCard,
-                                    elevation: 10,
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 10.0,
-                                          ),
-                                          child: Text(
-                                            'Remaining days',
-                                            style: TextStyle(
-                                              color: colors.text,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          ((state
-                                                          .medicines[index]
-                                                          .medicineAmount -
-                                                      state
-                                                          .medicines[index]
-                                                          .medicineTaken) ~/
-                                                  3)
-                                              .toString()
-                                              .toString(),
-                                          style: TextStyle(
-                                            color: colors.text,
-                                            fontSize: 48,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 15.0,
-                                            horizontal: 8.0,
-                                          ),
-                                          child: LinearProgressIndicator(
-                                            value: 0.5,
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                            backgroundColor:
-                                                colors.progressBackground,
-                                            valueColor:
-                                                AlwaysStoppedAnimation<Color>(
-                                                  colors.progressColor,
-                                                ),
-                                            minHeight: 5,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -298,28 +154,50 @@ class MedicineDetail extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(
                         children: [
                           IconsAndInfo(
-                            icons: Icons.timer,
-                            title: 'Next dose',
-                            info: '8:00 AM',
-                          ),
-                          IconsAndInfo(
-                            icons: Icons.rule,
-                            title: 'Instruction',
-                            info: 'Take before food',
-                          ),
-                          IconsAndInfo(
                             icons: Icons.medication_sharp,
-                            title: 'Dosage',
-                            info: '500 mg',
+                            title: 'Total Amount',
+                            info: '${medicine.medicineAmount} pills',
                           ),
                           IconsAndInfo(
-                            icons: Icons.calendar_month_sharp,
-                            title: 'Taken Days',
-                            info: '41',
+                            icons: Icons.check_circle,
+                            title: 'Taken Amount',
+                            info: '${medicine.medicineTaken} pills',
+                          ),
+                          IconsAndInfo(
+                            icons: Icons.medical_services,
+                            title: 'Remaining Amount',
+                            info:
+                                '${medicine.medicineAmount - medicine.medicineTaken} pills',
+                          ),
+                          IconsAndInfo(
+                            icons: Icons.calendar_month,
+                            title: 'Start Date',
+                            info:
+                                '${medicine.startDate.day}/${medicine.startDate.month}/${medicine.startDate.year}',
+                          ),
+                          if (medicine.interval != null)
+                            IconsAndInfo(
+                              icons: Icons.timer,
+                              title: 'Interval',
+                              info: 'Every ${medicine.interval} hours',
+                            ),
+                          if (medicine.time != null &&
+                              medicine.time!.isNotEmpty)
+                            IconsAndInfo(
+                              icons: Icons.access_time,
+                              title: 'Specific Times',
+                              info: medicine.time!
+                                  .map((t) => '${t.hour}:${t.minute}')
+                                  .join(', '),
+                            ),
+                          IconsAndInfo(
+                            icons: Icons.timer_outlined,
+                            title: 'Last Taken',
+                            info:
+                                '${medicine.lastTriggered.hour}:${medicine.lastTriggered.minute}',
                           ),
                         ],
                       ),
@@ -346,41 +224,18 @@ class MedicineDetail extends StatelessWidget {
                               ),
                             ),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.edit,
                                   color: colors.primaryButtonText,
                                 ),
+                                const SizedBox(width: 10),
                                 Text(
                                   'Edit Medicine',
                                   style: TextStyle(
                                     color: colors.primaryButtonText,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              side: BorderSide(color: colors.error),
-                              foregroundColor: colors.primaryButton,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(Icons.delete, color: colors.error),
-                                Text(
-                                  'Delete Medicine',
-                                  style: TextStyle(color: colors.error),
                                 ),
                               ],
                             ),
