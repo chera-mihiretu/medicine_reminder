@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
+import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/add_medicine_usecase.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/delete_medicine_usecase.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart';
@@ -23,19 +23,11 @@ void main() {
   late UpdateMedicineUsecase updateMedicineUseCase;
   late DeleteMedicineUsecase deleteMedicineUsecase;
   late AddMedicineUsecase addMedicineUsecase;
-  MedicineEntity testData = MedicineEntity(
-    medicineId: "",
-    name: MedicineTestData.medicineEntity.name,
-    interval: MedicineTestData.medicineEntity.interval,
-    time: MedicineTestData.medicineEntity.time,
-    startDate: MedicineTestData.medicineEntity.startDate,
-    medicineAmount: MedicineTestData.medicineEntity.medicineAmount,
-    medicineTaken: MedicineTestData.medicineEntity.medicineTaken,
-    lastTriggered: MedicineTestData.medicineEntity.lastTriggered,
-  );
+
+  final testData = MedicineTestData.medicineEntity;
+  final errorMessage = "Test error message";
 
   setUp(() {
-    mockMedicineRepository = MockMedicineRepository();
     mockMedicineRepository = MockMedicineRepository();
     getAllMedicineUsecase = GetAllMedicineUsecase(mockMedicineRepository);
     getMedicineUsecase = GetMadicineUsecase(mockMedicineRepository);
@@ -57,114 +49,215 @@ void main() {
   });
 
   group('MedicineBloc Tests', () {
-    test("Should posses intial state in the first ", () {
+    test("Should have initial state", () {
       expect(medicineBloc.state, MedicineInitialState());
     });
 
-    blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and list of medicine",
-      build: () => medicineBloc,
-      setUp: () {
-        when(
-          mockMedicineRepository.getMedicines(),
-        ).thenAnswer((_) async => Right([testData]));
-      },
-      act: (testBloc) {
-        testBloc.add(GetMedicineListEvent());
-      },
-      expect:
-          () => [
-            MedicineLoadingState(),
-            MedicineLoadedState([testData]),
-          ],
-    );
+    group('GetMedicineListEvent Tests', () {
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and loaded states when getting medicine list successfully",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.getMedicines(),
+          ).thenAnswer((_) async => Right([testData]));
+        },
+        act: (bloc) => bloc.add(GetMedicineListEvent()),
+        expect:
+            () => [
+              MedicineLoadingState(),
+              MedicineLoadedState([testData]),
+            ],
+      );
 
-    blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and medicine details",
-      build: () => medicineBloc,
-      setUp: () {
-        when(
-          mockMedicineRepository.getMedicine(any),
-        ).thenAnswer((_) async => Right(testData));
-      },
-      act: (testBloc) {
-        testBloc.add(GetMedicineEvent(medicineId: testData.medicineId));
-      },
-      expect:
-          () => [
-            MedicineLoadingState(),
-            MedicineLoadedState([testData]),
-          ],
-    );
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and error states when getting medicine list fails",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.getMedicines(),
+          ).thenAnswer((_) async => Left(CacheFailure(message: errorMessage)));
+        },
+        act: (bloc) => bloc.add(GetMedicineListEvent()),
+        expect:
+            () => [MedicineLoadingState(), MedicineErrorState(errorMessage)],
+      );
+    });
 
-    blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and success state when adding medicine",
-      build: () => medicineBloc,
-      setUp: () {
-        when(
-          mockMedicineRepository.addMedicine(any),
-        ).thenAnswer((_) async => const Right(true));
-      },
-      act: (testBloc) {
-        testBloc.add(
-          AddMedicineEvent(
-            name: testData.name,
-            interval: testData.interval,
-            time: testData.time,
-            startDate: testData.startDate,
-            medicineAmount: testData.medicineAmount,
-            medicineTaken: testData.medicineTaken,
-            lastTriggered: testData.lastTriggered,
-          ),
-        );
-      },
-      expect: () {
-        return [MedicineLoadingState(), MedicineAddedState()];
-      },
-    );
+    group('GetMedicineEvent Tests', () {
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and loaded states when getting medicine successfully",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.getMedicine(any),
+          ).thenAnswer((_) async => Right(testData));
+        },
+        act:
+            (bloc) =>
+                bloc.add(GetMedicineEvent(medicineId: testData.medicineId)),
+        expect:
+            () => [
+              MedicineLoadingState(),
+              MedicineLoadedState([testData]),
+            ],
+      );
 
-    blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and success state when updating medicine",
-      build: () => medicineBloc,
-      setUp: () {
-        when(
-          mockMedicineRepository.updateMedicine(any),
-        ).thenAnswer((_) async => const Right(true));
-      },
-      act: (testBloc) {
-        testBloc.add(
-          UpdataeMedicineEvent(
-            medicineId: testData.medicineId,
-            name: testData.name,
-            interval: testData.interval,
-            time: testData.time,
-            startDate: testData.startDate,
-            medicineAmount: testData.medicineAmount,
-            medicineTaken: testData.medicineTaken,
-            lastTriggered: testData.lastTriggered,
-          ),
-        );
-      },
-      expect:
-          () => [
-            MedicineLoadingState(),
-            MedicineLoadedState([testData]),
-          ],
-    );
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and error states when getting medicine fails",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.getMedicine(any),
+          ).thenAnswer((_) async => Left(CacheFailure(message: errorMessage)));
+        },
+        act:
+            (bloc) =>
+                bloc.add(GetMedicineEvent(medicineId: testData.medicineId)),
+        expect:
+            () => [MedicineLoadingState(), MedicineErrorState(errorMessage)],
+      );
+    });
 
-    blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and success state when deleting medicine",
-      build: () => medicineBloc,
-      setUp: () {
-        when(
-          mockMedicineRepository.deleteMedicine(any),
-        ).thenAnswer((_) async => const Right(true));
-      },
-      act: (testBloc) {
-        testBloc.add(DeleteMedicineEvent(medicineId: testData.medicineId));
-      },
-      expect: () => [MedicineLoadingState(), MedicineLoadedState([])],
-    );
-    // Add more tests here
+    group('AddMedicineEvent Tests', () {
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and added states when adding medicine successfully",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.addMedicine(any),
+          ).thenAnswer((_) async => const Right(true));
+        },
+        act:
+            (bloc) => bloc.add(
+              AddMedicineEvent(
+                name: testData.name,
+                interval: testData.interval,
+                time: testData.time,
+                startDate: testData.startDate,
+                medicineAmount: testData.medicineAmount,
+                medicineTaken: testData.medicineTaken,
+                lastTriggered: testData.lastTriggered,
+              ),
+            ),
+        expect: () => [MedicineLoadingState(), MedicineAddedState()],
+      );
+
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and error states when adding medicine fails",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.addMedicine(any),
+          ).thenAnswer((_) async => Left(CacheFailure(message: errorMessage)));
+        },
+        act:
+            (bloc) => bloc.add(
+              AddMedicineEvent(
+                name: testData.name,
+                interval: testData.interval,
+                time: testData.time,
+                startDate: testData.startDate,
+                medicineAmount: testData.medicineAmount,
+                medicineTaken: testData.medicineTaken,
+                lastTriggered: testData.lastTriggered,
+              ),
+            ),
+        expect:
+            () => [MedicineLoadingState(), MedicineErrorState(errorMessage)],
+      );
+    });
+
+    group('UpdateMedicineEvent Tests', () {
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and loaded states when updating medicine successfully",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.updateMedicine(any),
+          ).thenAnswer((_) async => const Right(true));
+          when(
+            mockMedicineRepository.getMedicines(),
+          ).thenAnswer((_) async => Right([testData]));
+        },
+        act:
+            (bloc) => bloc.add(
+              UpdataeMedicineEvent(
+                medicineId: testData.medicineId,
+                name: testData.name,
+                interval: testData.interval,
+                time: testData.time,
+                startDate: testData.startDate,
+                medicineAmount: testData.medicineAmount,
+                medicineTaken: testData.medicineTaken,
+                lastTriggered: testData.lastTriggered,
+              ),
+            ),
+        expect:
+            () => [
+              MedicineLoadingState(),
+              MedicineLoadedState([testData]),
+            ],
+      );
+
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and error states when updating medicine fails",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.updateMedicine(any),
+          ).thenAnswer((_) async => Left(CacheFailure(message: errorMessage)));
+        },
+        act:
+            (bloc) => bloc.add(
+              UpdataeMedicineEvent(
+                medicineId: testData.medicineId,
+                name: testData.name,
+                interval: testData.interval,
+                time: testData.time,
+                startDate: testData.startDate,
+                medicineAmount: testData.medicineAmount,
+                medicineTaken: testData.medicineTaken,
+                lastTriggered: testData.lastTriggered,
+              ),
+            ),
+        expect:
+            () => [MedicineLoadingState(), MedicineErrorState(errorMessage)],
+      );
+    });
+
+    group('DeleteMedicineEvent Tests', () {
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and loaded states when deleting medicine successfully",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.deleteMedicine(any),
+          ).thenAnswer((_) async => const Right(true));
+          when(
+            mockMedicineRepository.getMedicines(),
+          ).thenAnswer((_) async => Right([]));
+        },
+        act:
+            (bloc) =>
+                bloc.add(DeleteMedicineEvent(medicineId: testData.medicineId)),
+        expect: () => [MedicineLoadingState(), MedicineLoadedState([])],
+      );
+
+      blocTest<MedicineBloc, MedicineState>(
+        "Should emit loading and error states when deleting medicine fails",
+        build: () => medicineBloc,
+        setUp: () {
+          when(
+            mockMedicineRepository.deleteMedicine(any),
+          ).thenAnswer((_) async => Left(CacheFailure(message: errorMessage)));
+        },
+        act:
+            (bloc) =>
+                bloc.add(DeleteMedicineEvent(medicineId: testData.medicineId)),
+        expect:
+            () => [MedicineLoadingState(), MedicineErrorState(errorMessage)],
+      );
+    });
   });
 }

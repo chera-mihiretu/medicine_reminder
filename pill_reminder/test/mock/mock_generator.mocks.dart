@@ -6,7 +6,7 @@
 import 'dart:async' as _i6;
 
 import 'package:dartz/dartz.dart' as _i2;
-import 'package:flutter_local_notifications/src/flutter_local_notifications_plugin.dart'
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as _i12;
 import 'package:flutter_local_notifications/src/initialization_settings.dart'
     as _i13;
@@ -31,6 +31,8 @@ import 'package:pill_reminder/features/medicine/domain/repositories/medicine_rep
     as _i5;
 import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart'
     as _i22;
+import 'package:pill_reminder/features/notification/data/callbacks/notification_callback.dart'
+    as _i23;
 import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart'
     as _i20;
 import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart'
@@ -858,4 +860,25 @@ class MockNotificationRepository extends _i1.Mock
           ),
         )),
       ) as _i6.Future<_i2.Either<_i7.Failure, bool>>);
+}
+
+/// A class which mocks [NotificationCallback].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationCallback extends _i1.Mock
+    implements _i23.NotificationCallback {
+  MockNotificationCallback() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.Future<void> showNotification(_i20.NotificationEntity? notification) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #showNotification,
+          [notification],
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
 }

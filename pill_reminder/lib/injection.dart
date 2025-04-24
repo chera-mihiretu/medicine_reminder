@@ -1,3 +1,4 @@
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -33,6 +34,7 @@ Future<void> init() async {
   );
   //! Hive Initialization and Registration
   await Hive.initFlutter();
+  await AndroidAlarmManager.initialize();
   Hive.registerAdapter(MedicineModelAdapter());
   Hive.registerAdapter(TimeOfDayAdapter());
   final medicineBox = await Hive.openBox<MedicineModel>(AppData.medicineBox);

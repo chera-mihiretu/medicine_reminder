@@ -29,8 +29,8 @@ class MedicineTestData {
   static MedicineEntity medicineEntity = MedicineEntity(
     medicineId: '0',
     name: 'Cloxa',
-    interval: -1,
-    time: const [],
+    interval: 20,
+    time: [TimeOfDay.now()],
     startDate: now,
     medicineAmount: 10,
     medicineTaken: 2,

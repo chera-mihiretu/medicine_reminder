@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart';
+import 'package:pill_reminder/features/notification/data/callbacks/notification_callback.dart';
 import 'package:pill_reminder/features/notification/domain/entities/notifaction_enums.dart';
 import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart';
 import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart';
@@ -46,11 +47,10 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
               priority: MyPriority.high,
               importance: MyImportance.high,
             );
-            AndroidAlarmManager.oneShot(
+            await AndroidAlarmManager.oneShot(
               Duration(minutes: remainingTime),
-              DateTime.now().millisecondsSinceEpoch,
-              () async =>
-                  await notificationRepository.showNotification(notification),
+              (medicine.medicineId.hashCode + 1).abs() % 2147483647,
+              () => showNotificationCallback(notification),
             );
           }
         } else {
@@ -73,11 +73,10 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
                 priority: MyPriority.high,
                 importance: MyImportance.high,
               );
-              AndroidAlarmManager.oneShot(
+              await AndroidAlarmManager.oneShot(
                 Duration(minutes: difference),
-                DateTime.now().millisecondsSinceEpoch,
-                () async =>
-                    await notificationRepository.showNotification(notification),
+                (medicine.medicineId.hashCode + 2).abs() % 2147483647,
+                () => showNotificationCallback(notification),
               );
             }
           }
@@ -95,7 +94,7 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
       final nowInMinutes = currentTime.hour * 60 + currentTime.minute;
 
       for (MedicineEntity medicine in medicines) {
-        if (medicine.interval != null) {
+        if (medicine.interval != null && medicine.interval != -1) {
           TimeOfDay last = medicine.lastTriggered;
           final lastInMinutes = last.hour * 60 + last.minute;
           final diff = nowInMinutes - lastInMinutes;
@@ -116,11 +115,10 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
               priority: MyPriority.high,
               importance: MyImportance.high,
             );
-            AndroidAlarmManager.oneShot(
+            await AndroidAlarmManager.oneShot(
               Duration(minutes: remainingTime - 10),
-              DateTime.now().millisecondsSinceEpoch,
-              () async =>
-                  await notificationRepository.showNotification(notification),
+              (medicine.medicineId.hashCode + 3).abs() % 2147483647,
+              () => showNotificationCallback(notification),
             );
           }
         } else {
@@ -143,11 +141,10 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
                 priority: MyPriority.high,
                 importance: MyImportance.high,
               );
-              AndroidAlarmManager.oneShot(
+              await AndroidAlarmManager.oneShot(
                 Duration(minutes: difference - 10),
-                DateTime.now().millisecondsSinceEpoch,
-                () async =>
-                    await notificationRepository.showNotification(notification),
+                (medicine.medicineId.hashCode + 4).abs() % 2147483647,
+                () => showNotificationCallback(notification),
               );
             }
           }

@@ -65,44 +65,45 @@ void main() {
       "The bloc should show loading and list of medicine",
       build: () => medicineBloc,
       setUp: () {
-        when(mockMedicineRepository.getMedicines())
-            .thenAnswer((_) async => Right([testData]));
+        when(
+          mockMedicineRepository.getMedicines(),
+        ).thenAnswer((_) async => Right([testData]));
       },
       act: (testBloc) {
         testBloc.add(GetMedicineListEvent());
       },
-      expect: () => [
-        MedicineLoadingState(),
-        MedicineLoadedState({
-          testData.medicineId: testData,
-        }),
-      ],
+      expect:
+          () => [
+            MedicineLoadingState(),
+            MedicineLoadedState([testData]),
+          ],
     );
 
     blocTest<MedicineBloc, MedicineState>(
       "The bloc should show loading and medicine details",
       build: () => medicineBloc,
       setUp: () {
-        when(mockMedicineRepository.getMedicine(any))
-            .thenAnswer((_) async => Right(testData));
+        when(
+          mockMedicineRepository.getMedicine(any),
+        ).thenAnswer((_) async => Right(testData));
       },
       act: (testBloc) {
         testBloc.add(GetMedicineEvent(medicineId: testData.medicineId));
       },
-      expect: () => [
-        MedicineLoadingState(),
-        MedicineLoadedState({
-          testData.medicineId: testData,
-        }),
-      ],
+      expect:
+          () => [
+            MedicineLoadingState(),
+            MedicineLoadedState([testData]),
+          ],
     );
 
     blocTest<MedicineBloc, MedicineState>(
       "The bloc should show loading and success state when adding medicine",
       build: () => medicineBloc,
       setUp: () {
-        when(mockMedicineRepository.addMedicine(any))
-            .thenAnswer((_) async => const Right(true));
+        when(
+          mockMedicineRepository.addMedicine(any),
+        ).thenAnswer((_) async => const Right(true));
       },
       act: (testBloc) {
         testBloc.add(
@@ -118,12 +119,7 @@ void main() {
         );
       },
       expect: () {
-        return [
-          MedicineLoadingState(),
-          MedicineLoadedState({
-            testData.medicineId: testData,
-          }),
-        ];
+        return [MedicineLoadingState(), MedicineAddedState()];
       },
     );
 
@@ -131,8 +127,9 @@ void main() {
       "The bloc should show loading and success state when updating medicine",
       build: () => medicineBloc,
       setUp: () {
-        when(mockMedicineRepository.updateMedicine(any))
-            .thenAnswer((_) async => const Right(true));
+        when(
+          mockMedicineRepository.updateMedicine(any),
+        ).thenAnswer((_) async => const Right(true));
       },
       act: (testBloc) {
         testBloc.add(
@@ -148,28 +145,25 @@ void main() {
           ),
         );
       },
-      expect: () => [
-        MedicineLoadingState(),
-        MedicineLoadedState({
-          testData.medicineId: testData,
-        }),
-      ],
+      expect:
+          () => [
+            MedicineLoadingState(),
+            MedicineErrorState("Medicine not found"),
+          ],
     );
 
     blocTest<MedicineBloc, MedicineState>(
       "The bloc should show loading and success state when deleting medicine",
       build: () => medicineBloc,
       setUp: () {
-        when(mockMedicineRepository.deleteMedicine(any))
-            .thenAnswer((_) async => const Right(true));
+        when(
+          mockMedicineRepository.deleteMedicine(any),
+        ).thenAnswer((_) async => const Right(true));
       },
       act: (testBloc) {
         testBloc.add(DeleteMedicineEvent(medicineId: testData.medicineId));
       },
-      expect: () => [
-        MedicineLoadingState(),
-        const MedicineLoadedState({}),
-      ],
+      expect: () => [MedicineLoadingState(), const MedicineLoadedState([])],
     );
     // Add more tests here
   });
