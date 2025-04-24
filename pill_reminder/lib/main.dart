@@ -6,6 +6,7 @@ import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_screen.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/edit_medicine_page.dart';
 import 'package:pill_reminder/injection.dart';
 import 'package:pill_reminder/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,11 @@ class MyApp extends StatelessWidget {
                 (context) => const MedicineListScreen(),
             AddMedicinePage.router: (context) => AddMedicinePage(),
             MedicineDetail.routeName: (context) => const MedicineDetail(),
+            EditMedicinePage.routeName:
+                (context) => EditMedicinePage(
+                  medicineIndex:
+                      ModalRoute.of(context)!.settings.arguments as int,
+                ),
             // Add other routes here
           },
         ),

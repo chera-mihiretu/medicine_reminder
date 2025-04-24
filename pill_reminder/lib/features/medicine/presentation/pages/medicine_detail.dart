@@ -4,6 +4,7 @@ import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_state.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/icon_and_info.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/edit_medicine_page.dart';
 import 'package:provider/provider.dart';
 
 class MedicineDetail extends StatelessWidget {
@@ -332,7 +333,10 @@ class MedicineDetail extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              // Add your action here
+                              Navigator.of(context).pushNamed(
+                                EditMedicinePage.routeName,
+                                arguments: index,
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 20),

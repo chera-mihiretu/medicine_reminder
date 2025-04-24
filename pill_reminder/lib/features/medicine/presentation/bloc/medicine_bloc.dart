@@ -92,8 +92,19 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       result.fold((failure) => emit(MedicineErrorState(failure.message)), (
         status,
       ) {
-        loadedState.medicines.add(medicine);
-        emit(MedicineLoadedState(loadedState.medicines));
+        // Find and update the existing medicine
+        final updatedMedicines = List<MedicineEntity>.from(
+          loadedState.medicines,
+        );
+        final index = updatedMedicines.indexWhere(
+          (m) => m.medicineId == medicine.medicineId,
+        );
+        if (index != -1) {
+          updatedMedicines[index] = medicine;
+          emit(MedicineLoadedState(updatedMedicines));
+        } else {
+          emit(MedicineErrorState("Medicine not found"));
+        }
       });
     });
 
