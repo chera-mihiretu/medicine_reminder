@@ -109,7 +109,9 @@ class MedicineDetail extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              'Antibiotics',
+                              state.medicines[index].interval != null
+                                  ? 'Interval: ${state.medicines[index].interval} hours'
+                                  : 'Specific Times',
                               style: TextStyle(color: colors.primaryButtonText),
                             ),
                           ),
@@ -130,7 +132,7 @@ class MedicineDetail extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  '9 Days',
+                                  '${DateTime.now().difference(state.medicines[index].startDate).inDays} Days',
                                   style: TextStyle(
                                     color: colors.primaryButton,
                                     fontSize: 16,
