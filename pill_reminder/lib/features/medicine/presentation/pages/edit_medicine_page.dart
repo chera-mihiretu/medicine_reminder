@@ -38,6 +38,20 @@ class EditMedicinePage extends StatelessWidget {
         final TextEditingController takenAmountController =
             TextEditingController(text: medicine.medicineTaken.toString());
         final List<TimeOfDay> selectedTime = medicine.time ?? [];
+        final List<TextEditingController> specificTimeControllers = [];
+
+        // Initialize specific time controllers if medicine uses specific times
+        if (medicine.time != null && medicine.time!.isNotEmpty) {
+          for (var time in medicine.time!) {
+            specificTimeControllers.add(
+              TextEditingController(text: '${time.hour}:${time.minute}'),
+            );
+          }
+        } else {
+          // Add at least one controller if no times exist
+          specificTimeControllers.add(TextEditingController());
+        }
+
         MedicineMode medicineMode =
             medicine.interval != null
                 ? MedicineMode.interval
@@ -106,7 +120,7 @@ class EditMedicinePage extends StatelessWidget {
                               medicineMode = newMode;
                             },
                             intervalController: intervalController,
-                            specificTimeCotrollers: [],
+                            specificTimeCotrollers: specificTimeControllers,
                           ),
 
                           CustomInput(
