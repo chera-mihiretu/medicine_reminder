@@ -43,8 +43,21 @@ class EditMedicinePage extends StatelessWidget {
         // Initialize specific time controllers if medicine uses specific times
         if (medicine.time != null && medicine.time!.isNotEmpty) {
           for (var time in medicine.time!) {
+            int hour = time.hour;
+            String period =
+                time.period.toString().split('.').last.toUpperCase();
+
+            // Convert to 12-hour format
+            if (hour > 12) {
+              hour -= 12;
+            } else if (hour == 0) {
+              hour = 12;
+            }
+
             specificTimeControllers.add(
-              TextEditingController(text: '${time.hour}:${time.minute}'),
+              TextEditingController(
+                text: '$hour:${time.minute.toString().padLeft(2, '0')} $period',
+              ),
             );
           }
         } else {

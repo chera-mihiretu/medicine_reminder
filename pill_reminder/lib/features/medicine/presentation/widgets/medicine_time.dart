@@ -126,12 +126,23 @@ class _MedicineTimeState extends State<MedicineTime> {
                         onTap: () async {
                           await pickTime(index);
 
-                          int hour = (widget.selectedTime[index].hour);
+                          int hour = widget.selectedTime[index].hour;
+                          String period =
+                              widget.selectedTime[index].period
+                                  .toString()
+                                  .split('.')
+                                  .last
+                                  .toUpperCase();
 
-                          hour = ((hour % 13) + (hour ~/ 13));
+                          // Convert to 12-hour format
+                          if (hour > 12) {
+                            hour -= 12;
+                          } else if (hour == 0) {
+                            hour = 12;
+                          }
 
                           widget.specificTimeCotrollers[index].text =
-                              '${hour.toString().padLeft(2, '0')}:${widget.selectedTime[index].minute.toString().padLeft(2, '0')} ${widget.selectedTime[index].period.toString().split('.').last.toUpperCase()}';
+                              '$hour:${widget.selectedTime[index].minute.toString().padLeft(2, '0')} $period';
                         },
                       );
                     }),
