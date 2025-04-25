@@ -8,9 +8,10 @@ import 'package:pill_reminder/features/notification/presentation/bloc/notificati
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   ShowNotificationUsecase showNotificationUsecase;
   ShowFullScreenNotificationUsecase showFullScreenNotificationUsecase;
-  NotificationBloc(
-      this.showNotificationUsecase, this.showFullScreenNotificationUsecase)
-      : super(NotificationInitialState()) {
+  NotificationBloc({
+    required this.showNotificationUsecase,
+    required this.showFullScreenNotificationUsecase,
+  }) : super(NotificationInitialState()) {
     on<ShowNotificationEvent>((event, emit) async {
       emit(NotificationLoadingState());
       final notification = NotificationEntity(
@@ -53,8 +54,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         importance: event.importance,
       );
 
-      final result =
-          await showFullScreenNotificationUsecase.execute(notification);
+      final result = await showFullScreenNotificationUsecase.execute(
+        notification,
+      );
 
       result.fold(
         (failure) => emit(NotificationErrorState(message: failure.message)),

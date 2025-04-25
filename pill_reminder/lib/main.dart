@@ -8,6 +8,7 @@ import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_screen.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/edit_medicine_page.dart';
+import 'package:pill_reminder/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:pill_reminder/injection.dart';
 import 'package:pill_reminder/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -17,34 +18,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   //! This is for requesting permission on IOS wich not going to be visible on android mobiles
-  // Initialize notifications
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  const DarwinInitializationSettings initializationSettingsIOS =
-      DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
-
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsIOS,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-  // Request iOS permissions
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin
-      >()
-      ?.requestPermissions(alert: true, badge: true, sound: true);
-
+  // Initialize notification
   await init();
   runApp(
     // DevicePreview(
@@ -65,7 +39,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => locator<ThemeProvider>()),
       ],
       child: MultiBlocProvider(
-        providers: [BlocProvider(create: (context) => locator<MedicineBloc>())],
+        providers: [
+          BlocProvider(create: (context) => locator<MedicineBloc>()),
+          BlocProvider(create: (context) => locator<NotificationBloc>()),
+        ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Pill Reminder',

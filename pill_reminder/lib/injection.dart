@@ -23,6 +23,7 @@ import 'package:pill_reminder/features/notification/domain/usecases/show_full_sc
 import 'package:pill_reminder/features/notification/domain/usecases/show_notification_usecase.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/trigger_notification_ten_minute_before_usecase.dart';
 import 'package:pill_reminder/features/notification/domain/usecases/trigger_notification_usecase.dart';
+import 'package:pill_reminder/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:pill_reminder/features/notification/services/background_task.dart';
 
 final locator = GetIt.instance;
@@ -48,6 +49,19 @@ Future<void> init() async {
   //! Flutter Local Notifications Plugin Initialization
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  // Initialize notification channel
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const DarwinInitializationSettings initializationSettingsIOS =
+      DarwinInitializationSettings();
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsIOS,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
   locator.registerLazySingleton<FlutterLocalNotificationsPlugin>(
     () => flutterLocalNotificationsPlugin,
   );
@@ -56,9 +70,8 @@ Future<void> init() async {
   locator.registerLazySingleton<MedicineRepository>(
     () => MedicineRepositoryImpl(localDataSource: locator()),
   );
-  locator.registerLazySingleton<NotificationRepository>(
-    () =>
-        NotificationRepositoryImpl(flutterLocalNotificationsPlugin: locator()),
+  locator.registerSingleton<NotificationRepository>(
+    NotificationRepositoryImpl(flutterLocalNotificationsPlugin: locator()),
   );
   locator.registerLazySingleton<TriggerNotificationRepository>(
     () => TriggerNotificationRepositoryImpl(
@@ -103,6 +116,12 @@ Future<void> init() async {
       addMedicineUseCase: locator(),
       deleteMedicineUsecase: locator(),
       updateMedicineUsecase: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => NotificationBloc(
+      showNotificationUsecase: locator(),
+      showFullScreenNotificationUsecase: locator(),
     ),
   );
 }

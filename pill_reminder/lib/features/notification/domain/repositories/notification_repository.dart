@@ -4,5 +4,6 @@ import 'package:pill_reminder/features/notification/domain/entities/notification
 
 abstract class NotificationRepository {
   Future<Either<Failure, bool>> showNotification(
-      NotificationEntity notification);
+    NotificationEntity notification,
+  );
 }

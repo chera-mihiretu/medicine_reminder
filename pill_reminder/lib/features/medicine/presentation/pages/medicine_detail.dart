@@ -5,6 +5,9 @@ import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_state.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/icon_and_info.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/edit_medicine_page.dart';
+import 'package:pill_reminder/features/notification/domain/entities/notifaction_enums.dart';
+import 'package:pill_reminder/features/notification/presentation/bloc/notification_bloc.dart';
+import 'package:pill_reminder/features/notification/presentation/bloc/notification_event.dart';
 import 'package:provider/provider.dart';
 
 class MedicineDetail extends StatelessWidget {
@@ -211,11 +214,38 @@ class MedicineDetail extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
+                              context.read<NotificationBloc>().add(
+                                ShowNotificationEvent(
+                                  id: int.parse(
+                                    state.medicines[index].medicineId,
+                                  ),
+                                  title: state.medicines[index].name,
+                                  body: 'Time to take your medicine',
+                                  payload: state.medicines[index].medicineId,
+                                  scheduledTime: DateTime.now().add(
+                                    const Duration(seconds: 10),
+                                  ),
+                                  isRecurring: false,
+                                  priority: MyPriority.high,
+                                  importance: MyImportance.high,
+                                  channelId: 'medication_channel_01',
+                                  channelName: 'Medication Reminders',
+                                  sound: 'default',
+                                ),
+                              );
+                            },
+                            child: Text('Trigger'),
+                          ),
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
                               Navigator.of(context).pushNamed(
                                 EditMedicinePage.routeName,
                                 arguments: index,
                               );
                             },
+
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 20),
                               backgroundColor: colors.primaryButton,
