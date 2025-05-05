@@ -25,7 +25,18 @@ void main() {
     });
 
     test('Should convert from entity to model', () {
-      expect(MedicineModel.fromEntity(medicineEntity), testExpect);
+      final toExpect = MedicineModel(
+        medicineId: medicineEntity.medicineId,
+        name: medicineEntity.name,
+        interval: medicineEntity.interval,
+        time: medicineEntity.time,
+        startDate: medicineEntity.startDate,
+        medicineAmount: medicineEntity.medicineAmount,
+        medicineTaken: medicineEntity.medicineTaken,
+        lastTriggered: medicineEntity.lastTriggered,
+      );
+
+      expect(MedicineModel.fromEntity(medicineEntity), toExpect);
     });
   });
 }

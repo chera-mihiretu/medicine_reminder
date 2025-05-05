@@ -214,32 +214,6 @@ class MedicineDetail extends StatelessWidget {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              context.read<NotificationBloc>().add(
-                                ShowNotificationEvent(
-                                  id: int.parse(
-                                    state.medicines[index].medicineId,
-                                  ),
-                                  title: state.medicines[index].name,
-                                  body: 'Time to take your medicine',
-                                  payload: state.medicines[index].medicineId,
-                                  scheduledTime: DateTime.now().add(
-                                    const Duration(seconds: 10),
-                                  ),
-                                  isRecurring: false,
-                                  priority: MyPriority.high,
-                                  importance: MyImportance.high,
-                                  channelId: 'medication_channel_01',
-                                  channelName: 'Medication Reminders',
-                                  sound: 'default',
-                                ),
-                              );
-                            },
-                            child: Text('Trigger'),
-                          ),
-                        ),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
                               Navigator.of(context).pushNamed(
                                 EditMedicinePage.routeName,
                                 arguments: index,

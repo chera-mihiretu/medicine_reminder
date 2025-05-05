@@ -19,7 +19,7 @@ class MedicineTestData {
     medicineId: '0',
     name: 'Cloxa',
     interval: -1,
-    time: const [],
+    time: [],
     startDate: now,
     medicineAmount: 10,
     medicineTaken: 2,
@@ -35,5 +35,18 @@ class MedicineTestData {
     medicineAmount: 10,
     medicineTaken: 2,
     lastTriggered: time,
+    scheduled: false,
+  );
+
+  static MedicineEntity medicineEntityWithInterval = MedicineEntity(
+    medicineId: '0',
+    name: 'Cloxa',
+    interval: -1,
+    time: [TimeOfDay.now()],
+    startDate: now,
+    medicineAmount: 10,
+    medicineTaken: 2,
+    lastTriggered: time,
+    scheduled: false,
   );
 }

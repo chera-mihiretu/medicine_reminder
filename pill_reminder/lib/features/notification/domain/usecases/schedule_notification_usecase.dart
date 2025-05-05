@@ -2,12 +2,12 @@ import 'package:dartz/dartz.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/notification/domain/repositories/trigger_notification_repository.dart';
 
-class TriggerNotificationUsecase {
+class ScheduleNotificationUsecase {
   TriggerNotificationRepository triggerNotificationRepository;
 
-  TriggerNotificationUsecase({required this.triggerNotificationRepository});
+  ScheduleNotificationUsecase({required this.triggerNotificationRepository});
 
   Future<Either<Failure, void>> execute() async {
-    return await triggerNotificationRepository.triggerNotification();
+    return await triggerNotificationRepository.scheduleNotification();
   }
 }

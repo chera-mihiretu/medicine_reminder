@@ -33,18 +33,18 @@ class NotificationEntity extends Equatable {
   });
   @override
   List<Object?> get props => [
-        id,
-        title,
-        body,
-        payload,
-        scheduledTime,
-        imageUrl,
-        isRecurring,
-        fullScreen,
-        sound,
-        channelId,
-        channelName,
-        priority,
-        importance,
-      ];
+    id,
+    title,
+    body,
+    payload,
+    scheduledTime,
+    imageUrl,
+    isRecurring,
+    fullScreen,
+    sound,
+    channelId,
+    channelName,
+    priority,
+    importance,
+  ];
 }

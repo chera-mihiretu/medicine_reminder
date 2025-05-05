@@ -47,6 +47,11 @@ class MedicineModel extends MedicineEntity {
   // ignore: overridden_fields
   final TimeOfDay lastTriggered;
 
+  @override
+  @HiveField(8)
+  // ignore: overridden_fields
+  final bool scheduled;
+
   const MedicineModel({
     required this.medicineId,
     required this.name,
@@ -56,6 +61,7 @@ class MedicineModel extends MedicineEntity {
     required this.medicineAmount,
     required this.medicineTaken,
     required this.lastTriggered,
+    this.scheduled = false,
   }) : super(
          medicineId: medicineId,
          name: name,
@@ -65,6 +71,7 @@ class MedicineModel extends MedicineEntity {
          medicineAmount: medicineAmount,
          medicineTaken: medicineTaken,
          lastTriggered: lastTriggered,
+         scheduled: scheduled,
        );
 
   factory MedicineModel.fromJson(Map<String, dynamic> json) {
@@ -98,11 +105,11 @@ class MedicineModel extends MedicineEntity {
       'medicineId': medicineId,
       'name': name,
       'interval': interval,
-      'time': time,
+      'time': time?.map((t) => t.toString()).toList() ?? [],
       'startDate': startDate.toIso8601String(),
       'medicineAmount': medicineAmount,
       'medicineTaken': medicineTaken,
-      'lastTriggered': lastTriggered,
+      'lastTriggered': lastTriggered.toString(),
     };
   }
 
@@ -116,6 +123,7 @@ class MedicineModel extends MedicineEntity {
       medicineAmount: medicineAmount,
       medicineTaken: medicineTaken,
       lastTriggered: lastTriggered,
+      scheduled: scheduled,
     );
   }
 }

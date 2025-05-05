@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/add_medicine_usecase.dart';
@@ -49,7 +51,9 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       emit(MedicineLoadingState());
 
       final medicine = MedicineEntity(
-        medicineId: DateTime.now().millisecondsSinceEpoch.toString(),
+        medicineId:
+            (DateTime.now().millisecondsSinceEpoch % (pow(10, 9) + 7))
+                .toString(),
         name: event.name,
         interval: event.interval,
         time: event.time,
@@ -57,6 +61,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         medicineAmount: event.medicineAmount,
         medicineTaken: event.medicineTaken,
         lastTriggered: event.lastTriggered,
+        scheduled: false,
       );
       final result = await addMedicineUseCase.execute(medicine);
 
@@ -68,14 +73,6 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
     });
     on<UpdataeMedicineEvent>((event, emit) async {
       final MedicineLoadedState loadedState;
-      if (state is MedicineLoadedState) {
-        loadedState = state as MedicineLoadedState;
-      } else {
-        loadedState = MedicineLoadedState([]);
-      }
-
-      emit(MedicineLoadingState());
-
       final medicine = MedicineEntity(
         medicineId: event.medicineId,
         name: event.name,
@@ -85,7 +82,15 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         medicineAmount: event.medicineAmount,
         medicineTaken: event.medicineTaken,
         lastTriggered: event.lastTriggered,
+        scheduled: false,
       );
+      if (state is MedicineLoadedState) {
+        loadedState = state as MedicineLoadedState;
+      } else {
+        loadedState = MedicineLoadedState([]);
+      }
+
+      emit(MedicineLoadingState());
 
       final result = await updateMedicineUsecase.execute(medicine);
 
@@ -103,7 +108,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
           updatedMedicines[index] = medicine;
           emit(MedicineLoadedState(updatedMedicines));
         } else {
-          emit(MedicineErrorState("Medicine not found"));
+          emit(MedicineLoadedState([medicine]));
         }
       });
     });

@@ -1,5 +1,4 @@
 import 'dart:developer' as dev;
-import 'dart:math';
 
 import 'package:dartz/dartz.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
@@ -7,51 +6,71 @@ import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart';
 import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz_data;
 
 class NotificationRepositoryImpl implements NotificationRepository {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  NotificationRepositoryImpl({required this.flutterLocalNotificationsPlugin});
+  NotificationRepositoryImpl({required this.flutterLocalNotificationsPlugin}) {
+    tz_data.initializeTimeZones();
+  }
 
   @override
-  Future<Either<Failure, bool>> showNotification(
+  Future<Either<Failure, bool>> scheduleNotification(
     NotificationEntity notification,
   ) async {
     try {
-      // Create notification channel
-      final AndroidNotificationChannel channel = AndroidNotificationChannel(
-        notification.channelId ?? 'default_channel',
-        notification.channelName ?? 'Default Channel',
-        importance: notification.importance.importance,
-        sound: const RawResourceAndroidNotificationSound('default'),
+      dev.log('Scheduling notification for ${notification.scheduledTime}');
+      final tz.TZDateTime scheduledDate = tz.TZDateTime.from(
+        notification.scheduledTime,
+        tz.local,
       );
-
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.createNotificationChannel(channel);
 
       final AndroidNotificationDetails androidNotificationDetails =
           AndroidNotificationDetails(
-            notification.channelId ?? 'default_channel',
-            notification.channelName ?? 'Default Channel',
-            fullScreenIntent: notification.fullScreen,
+            notification.channelId ?? 'scheduled_channel',
+            notification.channelName ?? 'Medicine Reminder',
+            channelDescription: 'Do Not forget to take your medicine',
             importance: notification.importance.importance,
             priority: notification.priority.priority,
-            // sound: const RawResourceAndroidNotificationSound('default'),
+            fullScreenIntent: notification.fullScreen,
+            actions: [
+              AndroidNotificationAction(
+                'take_medicine',
+                'Taken',
+                cancelNotification: true,
+                showsUserInterface: true,
+              ),
+            ],
           );
+
+      final DarwinNotificationDetails darwinNotificationDetails =
+          DarwinNotificationDetails(
+            categoryIdentifier: 'alarm_category',
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          );
+
       NotificationDetails notificationDetails = NotificationDetails(
         android: androidNotificationDetails,
-        iOS: DarwinNotificationDetails(),
+        iOS: darwinNotificationDetails,
       );
 
-      await flutterLocalNotificationsPlugin.show(
-        (notification.id % pow(10, 9) + 7).toInt(),
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        notification.id,
         notification.title,
         notification.body,
+        scheduledDate,
         notificationDetails,
         payload: notification.payload,
+
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+      dev.log(
+        'Notification scheduled for ${notification.scheduledTime}',
+        name: 'NotificationRepositoryImpl',
       );
     } catch (e) {
       dev.log(e.toString());

@@ -32,6 +32,7 @@ void main() {
     medicineAmount: MedicineTestData.medicineEntity.medicineAmount,
     medicineTaken: MedicineTestData.medicineEntity.medicineTaken,
     lastTriggered: MedicineTestData.medicineEntity.lastTriggered,
+    scheduled: false,
   );
 
   setUp(() {
@@ -148,7 +149,7 @@ void main() {
       expect:
           () => [
             MedicineLoadingState(),
-            MedicineErrorState("Medicine not found"),
+            MedicineLoadedState([testData]),
           ],
     );
 

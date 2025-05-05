@@ -6,139 +6,54 @@ import 'package:pill_reminder/features/notification/presentation/bloc/notificati
 import 'package:pill_reminder/features/notification/presentation/bloc/notification_event.dart';
 import 'package:pill_reminder/features/notification/presentation/bloc/notification_state.dart';
 import 'package:dartz/dartz.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../../../mock/mock_generator.mocks.dart';
-import '../../../../test_data/notification_test_data.dart';
 
 void main() {
   late NotificationBloc notificationBloc;
-  late MockShowNotificationUsecase mockShowNotificationUsecase;
-  late MockShowFullScreenNotificationUsecase
-      mockShowFullScreenNotificationUsecase;
-  final notification = NotificationTestData.notificationEntity;
+  late MockScheduleNotificationUsecase mockScheduleNotificationUsecase;
   const testError = "Error";
 
+  setUpAll(() {
+    tz_data.initializeTimeZones();
+  });
+
   setUp(() {
-    mockShowNotificationUsecase = MockShowNotificationUsecase();
-    mockShowFullScreenNotificationUsecase =
-        MockShowFullScreenNotificationUsecase();
+    mockScheduleNotificationUsecase = MockScheduleNotificationUsecase();
     notificationBloc = NotificationBloc(
-        mockShowNotificationUsecase, mockShowFullScreenNotificationUsecase);
+      scheduleNotificationUsecase: mockScheduleNotificationUsecase,
+    );
   });
 
   group('NotificationBloc', () {
     blocTest<NotificationBloc, NotificationState>(
-      'emits [NotificationLoadingState, NotificationLoadedState] when ShowNotifaicationEvent is added and usecase succeeds',
+      'emits [NotificationLoadingState, NotificationLoadedState] when ScheduleNotificationEvent is added and usecase succeeds',
       build: () {
-        when(mockShowNotificationUsecase.execute(any))
-            .thenAnswer((_) async => const Right(true));
+        when(
+          mockScheduleNotificationUsecase.execute(),
+        ).thenAnswer((_) async => const Right(null));
         return notificationBloc;
       },
-      act: (bloc) => bloc.add(
-        ShowNotificationEvent(
-          id: notification.id,
-          title: notification.title,
-          body: notification.body,
-          payload: notification.payload,
-          scheduledTime: notification.scheduledTime,
-          imageUrl: notification.imageUrl,
-          isRecurring: notification.isRecurring,
-          sound: notification.sound,
-          channelId: notification.channelId,
-          channelName: notification.channelName,
-          priority: notification.priority,
-          importance: notification.importance,
-        ),
-      ),
-      expect: () => [
-        NotificationLoadingState(),
-        NotificationLoadedState(),
-      ],
+      act: (bloc) => bloc.add(ScheduleNotificationEvent()),
+      expect: () => [NotificationLoadingState(), NotificationLoadedState()],
     );
 
     blocTest<NotificationBloc, NotificationState>(
-      'emits [NotificationLoadingState, NotificationErrorState] when ShowNotifaicationEvent is added and usecase fails',
+      'emits [NotificationLoadingState, NotificationErrorState] when ScheduleNotificationEvent is added and usecase fails',
       build: () {
-        when(mockShowNotificationUsecase.execute(any)).thenAnswer(
-            (_) async => const Left(PermissionFailure(message: testError)));
+        when(mockScheduleNotificationUsecase.execute()).thenAnswer(
+          (_) async => const Left(PermissionFailure(message: testError)),
+        );
         return notificationBloc;
       },
-      act: (bloc) => bloc.add(
-        ShowNotificationEvent(
-          id: notification.id,
-          title: notification.title,
-          body: notification.body,
-          payload: notification.payload,
-          scheduledTime: notification.scheduledTime,
-          imageUrl: notification.imageUrl,
-          isRecurring: notification.isRecurring,
-          sound: notification.sound,
-          channelId: notification.channelId,
-          channelName: notification.channelName,
-          priority: notification.priority,
-          importance: notification.importance,
-        ),
-      ),
-      expect: () => [
-        NotificationLoadingState(),
-        NotificationErrorState(message: 'Error'),
-      ],
-    );
-
-    blocTest<NotificationBloc, NotificationState>(
-      'emits [NotificationLoadingState, NotificationLoadedState] when ShowFullScreenNotification is added and usecase succeeds',
-      build: () {
-        when(mockShowFullScreenNotificationUsecase.execute(any))
-            .thenAnswer((_) async => const Right(true));
-        return notificationBloc;
-      },
-      act: (bloc) => bloc.add(
-        ShowFullScreenNotification(
-          id: notification.id,
-          title: notification.title,
-          body: notification.body,
-          payload: notification.payload,
-          scheduledTime: notification.scheduledTime,
-          imageUrl: notification.imageUrl,
-          isRecurring: notification.isRecurring,
-          sound: notification.sound,
-          channelId: notification.channelId,
-          channelName: notification.channelName,
-          priority: notification.priority,
-          importance: notification.importance,
-        ),
-      ),
-      expect: () => [
-        NotificationLoadingState(),
-        NotificationLoadedState(),
-      ],
-    );
-
-    blocTest<NotificationBloc, NotificationState>(
-      'emits [NotificationLoadingState, NotificationErrorState] when ShowFullScreenNotification is added and usecase fails',
-      build: () {
-        when(mockShowFullScreenNotificationUsecase.execute(any)).thenAnswer(
-            (_) async => const Left(PermissionFailure(message: testError)));
-        return notificationBloc;
-      },
-      act: (bloc) => bloc.add(ShowFullScreenNotification(
-        id: notification.id,
-        title: notification.title,
-        body: notification.body,
-        payload: notification.payload,
-        scheduledTime: notification.scheduledTime,
-        imageUrl: notification.imageUrl,
-        isRecurring: notification.isRecurring,
-        sound: notification.sound,
-        channelId: notification.channelId,
-        channelName: notification.channelName,
-        priority: notification.priority,
-        importance: notification.importance,
-      )),
-      expect: () => [
-        NotificationLoadingState(),
-        NotificationErrorState(message: 'Error'),
-      ],
+      act: (bloc) => bloc.add(ScheduleNotificationEvent()),
+      expect:
+          () => [
+            NotificationLoadingState(),
+            NotificationErrorState(message: 'Error'),
+          ],
     );
   });
 }

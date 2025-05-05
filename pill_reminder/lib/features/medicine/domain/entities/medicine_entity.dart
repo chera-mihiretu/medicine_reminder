@@ -10,6 +10,7 @@ class MedicineEntity extends Equatable {
   final int medicineAmount;
   final int medicineTaken;
   final TimeOfDay lastTriggered;
+  final bool scheduled;
   const MedicineEntity({
     required this.medicineId,
     required this.name,
@@ -19,6 +20,7 @@ class MedicineEntity extends Equatable {
     required this.medicineAmount,
     required this.medicineTaken,
     required this.lastTriggered,
+    required this.scheduled,
   });
 
   @override

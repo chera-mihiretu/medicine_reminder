@@ -22,6 +22,60 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<!-- Deep Link Handling -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.example.yourapp</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>yourapp</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- Notification Permissions -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+    </array>
+
+    <!-- Notification Categories for Actions -->
+    <key>UNNotificationCategory</key>
+    <array>
+        <dict>
+            <key>identifier</key>
+            <string>alarm_category</string>
+            <key>actions</key>
+            <array>
+                <dict>
+                    <key>identifier</key>
+                    <string>SNOOZE_ACTION</string>
+                    <key>title</key>
+                    <string>Snooze</string>
+                    <key>options</key>
+                    <dict>
+                        <key>foreground</key>
+                        <true/>
+                    </dict>
+                </dict>
+                <dict>
+                    <key>identifier</key>
+                    <string>DISMISS_ACTION</string>
+                    <key>title</key>
+                    <string>Dismiss</string>
+                    <key>options</key>
+                    <dict>
+                        <key>destructive</key>
+                        <true/>
+                    </dict>
+                </dict>
+            </array>
+        </dict>
+    </array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

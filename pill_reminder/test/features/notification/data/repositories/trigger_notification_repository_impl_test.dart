@@ -18,73 +18,83 @@ void main() {
   late TriggerNotificationRepositoryImpl repositoryImpl;
   late MockGetAllMedicineUsecase mockGetAllMedicineUsecase;
   late MockNotificationRepository mockNotificationRepository;
+  late MockMedicineLocalDataSource mockMedicineLocalDataSource;
 
   // Helper: create a MedicineEntity with a given interval and lastTriggered.
 
-  final testMedicine = MedicineTestData.medicineEntity;
+  final testMedicine = MedicineTestData.medicineEntityWithInterval;
 
   setUp(() {
     mockGetAllMedicineUsecase = MockGetAllMedicineUsecase();
     mockNotificationRepository = MockNotificationRepository();
+    mockMedicineLocalDataSource = MockMedicineLocalDataSource();
 
     repositoryImpl = TriggerNotificationRepositoryImpl(
       getAllMedicineUsecase: mockGetAllMedicineUsecase,
       notificationRepository: mockNotificationRepository,
+      medicineLocalDataSource: mockMedicineLocalDataSource,
     );
   });
 
   group('TriggerNotificationRepositoryImpl', () {
     test(
-        'triggerNotificationTenMinuteBefore returns Right(true) when medicine is in notification window',
-        () async {
-      // Arrange:
-      // We need a medicine with a non -1 interval.
-      // To simulate a remaining time between 10 and 20 minutes, we use:
-      // remainingTime = medicine.interval - diff, so we want diff=0 and interval = 15.
-      // For simplicity, set lastTriggered equal to TimeOfDay.now() so diff is near 0.
+      'scheduleNotification returns Right(true) when notifications are scheduled successfully',
+      () async {
+        // Arrange
+        when(
+          mockGetAllMedicineUsecase.execute(),
+        ).thenAnswer((_) async => Right([testMedicine]));
+        when(
+          mockNotificationRepository.scheduleNotification(any),
+        ).thenAnswer((_) async => const Right(true));
+        when(
+          mockMedicineLocalDataSource.updateMedicine(any),
+        ).thenAnswer((_) async => true);
 
-      // Return a list with one medicine.
-      when(mockGetAllMedicineUsecase.execute())
-          .thenAnswer((_) async => Right([testMedicine]));
+        // Act
+        final result = await repositoryImpl.scheduleNotification();
 
-      // Act:
-      final result = await repositoryImpl.triggerNotificationTenMinuteBefore();
-
-      // Assert:
-      expect(result, const Right(true));
-      verify(mockNotificationRepository.showNotification(any)).called(1);
-      // NOTE: Since AndroidAlarmManager.oneShot is static, we cannot directly verify that it was called.
-      // To test this behavior, consider wrapping oneShot into an injectable service.
-    });
-
-    test(
-        'triggerNotificationTenMinuteBefore returns Right(true) even if no medicine qualifies for alarm',
-        () async {
-      // Arrange:
-
-      when(mockGetAllMedicineUsecase.execute())
-          .thenAnswer((_) async => Right([testMedicine]));
-
-      // Act:
-      final result = await repositoryImpl.triggerNotificationTenMinuteBefore();
-
-      // Assert:
-      expect(result, const Right(true));
-      // In this case, the scheduling logic is skipped.
-    });
+        // Assert
+        expect(result, const Right(true));
+        verify(mockNotificationRepository.scheduleNotification(any)).called(1);
+        verify(mockMedicineLocalDataSource.updateMedicine(any)).called(1);
+      },
+    );
 
     test(
-        'triggerNotificationTenMinuteBefore returns Left(failure) when usecase fails',
-        () async {
-      // Arrange:
-      when(mockGetAllMedicineUsecase.execute()).thenAnswer(
-          (_) async => const Left(PermissionFailure(message: 'error')));
+      'scheduleNotification returns Right(true) when no medicines need scheduling',
+      () async {
+        // Arrange
+        when(
+          mockGetAllMedicineUsecase.execute(),
+        ).thenAnswer((_) async => const Right([]));
 
-      // Act:
-      // final result = await repositoryImpl.triggerNotificationTenMinuteBefore();
+        // Act
+        final result = await repositoryImpl.scheduleNotification();
 
-      // Assert:
-      // expect(result, Left(failure));
-    });
+        // Assert
+        expect(result, const Right(true));
+        verifyNever(mockNotificationRepository.scheduleNotification(any));
+        verifyNever(mockMedicineLocalDataSource.updateMedicine(any));
+      },
+    );
+
+    test(
+      'scheduleNotification returns Left(failure) when usecase fails',
+      () async {
+        // Arrange
+        when(mockGetAllMedicineUsecase.execute()).thenAnswer(
+          (_) async => const Left(PermissionFailure(message: 'error')),
+        );
+
+        // Act
+        final result = await repositoryImpl.scheduleNotification();
+
+        // Assert
+        expect(result, const Left(PermissionFailure(message: 'error')));
+        verifyNever(mockNotificationRepository.scheduleNotification(any));
+        verifyNever(mockMedicineLocalDataSource.updateMedicine(any));
+      },
+    );
   });
 }

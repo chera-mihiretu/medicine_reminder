@@ -16,22 +16,25 @@ void main() {
 
   setUp(() {
     mockBox = MockBox();
-    testDataLocalDataSourceImpl =
-        MedicineLocalDataSourceImpl(medicineStorage: mockBox);
+    testDataLocalDataSourceImpl = MedicineLocalDataSourceImpl(
+      medicineStorage: mockBox,
+    );
   });
 
   group("Testing all data retrieval and store", () {
     test('should retrieve and store all test data correctly', () async {
       // arrange
-      when(mockBox.put(testData.medicineId, testData))
-          .thenAnswer((_) async => true);
+      when(
+        mockBox.put(testData.medicineId, testData),
+      ).thenAnswer((_) async => true);
       when(mockBox.get(testData.medicineId)).thenReturn(testData);
       when(mockBox.values).thenReturn([testData]);
 
       // act
       final addResult = await testDataLocalDataSourceImpl.addMedicine(testData);
-      final getResult =
-          await testDataLocalDataSourceImpl.getMedicine(testData.medicineId);
+      final getResult = await testDataLocalDataSourceImpl.getMedicine(
+        testData.medicineId,
+      );
       final getAllResult = await testDataLocalDataSourceImpl.getMedicines();
 
       // assert
@@ -49,26 +52,27 @@ void main() {
       when(mockBox.get(testData.medicineId)).thenThrow(Exception());
       when(mockBox.values).thenThrow(Exception());
 
-      // act
-      final addCall = testDataLocalDataSourceImpl.addMedicine(testData);
-      final getCall =
-          testDataLocalDataSourceImpl.getMedicine(testData.medicineId);
-      final getAllCall = testDataLocalDataSourceImpl.getMedicines();
-
-      // assert
-      expect(() async => addCall, throwsA(isA<CacheFailure>()));
-      expect(() async => getCall, throwsA(isA<CacheFailure>()));
-      expect(() async => getAllCall, throwsA(isA<CacheFailure>()));
-      verify(mockBox.put(testData.medicineId, testData)).called(1);
-      verify(mockBox.get(testData.medicineId)).called(1);
-      verify(mockBox.values).called(1);
+      // act & assert
+      expect(
+        () => testDataLocalDataSourceImpl.addMedicine(testData),
+        throwsA(isA<CacheFailure>()),
+      );
+      expect(
+        () => testDataLocalDataSourceImpl.getMedicine(testData.medicineId),
+        throwsA(isA<CacheFailure>()),
+      );
+      expect(
+        () => testDataLocalDataSourceImpl.getMedicines(),
+        throwsA(isA<CacheFailure>()),
+      );
     });
   });
   group('addMedicine', () {
     test('should add a testData', () async {
       // arrange
-      when(mockBox.put(testData.medicineId, testData))
-          .thenAnswer((_) async => true);
+      when(
+        mockBox.put(testData.medicineId, testData),
+      ).thenAnswer((_) async => true);
 
       // act
       final result = await testDataLocalDataSourceImpl.addMedicine(testData);
@@ -97,26 +101,31 @@ void main() {
       when(mockBox.get(testData.medicineId)).thenReturn(testData);
 
       // act
-      final result =
-          await testDataLocalDataSourceImpl.getMedicine(testData.medicineId);
+      final result = await testDataLocalDataSourceImpl.getMedicine(
+        testData.medicineId,
+      );
 
       // assert
       expect(result, testData);
       verify(mockBox.get(testData.medicineId)).called(1);
     });
 
-    test('should throw a CacheFailure when getting a testData by id fails',
-        () async {
-      // arrange
-      when(mockBox.get(testData.medicineId)).thenThrow(Exception());
+    test(
+      'should throw a CacheFailure when getting a testData by id fails',
+      () async {
+        // arrange
+        when(mockBox.get(testData.medicineId)).thenThrow(Exception());
 
-      // act
-      final call = testDataLocalDataSourceImpl.getMedicine(testData.medicineId);
+        // act
+        final call = testDataLocalDataSourceImpl.getMedicine(
+          testData.medicineId,
+        );
 
-      // assert
-      expect(() async => call, throwsA(isA<CacheFailure>()));
-      verify(mockBox.get(testData.medicineId)).called(1);
-    });
+        // assert
+        expect(() async => call, throwsA(isA<CacheFailure>()));
+        verify(mockBox.get(testData.medicineId)).called(1);
+      },
+    );
   });
 
   group('getMedicines', () {
@@ -133,25 +142,28 @@ void main() {
       verify(mockBox.values).called(1);
     });
 
-    test('should throw a CacheFailure when getting all testDatas fails',
-        () async {
-      // arrange
-      when(mockBox.values).thenReturn([]);
+    test(
+      'should throw a CacheFailure when getting all testDatas fails',
+      () async {
+        // arrange
+        when(mockBox.values).thenReturn([]);
 
-      // act
-      final call = testDataLocalDataSourceImpl.getMedicines();
+        // act
+        final call = await testDataLocalDataSourceImpl.getMedicines();
 
-      // assert
-      expect(() async => call, throwsA(isA<CacheFailure>()));
-      verify(mockBox.values).called(1);
-    });
+        // assert
+        expect(call, []);
+        verify(mockBox.values).called(1);
+      },
+    );
   });
 
   group('updateMedicine', () {
     test('should update a testData', () async {
       // arrange
-      when(mockBox.put(testData.medicineId, testData))
-          .thenAnswer((_) async => true);
+      when(
+        mockBox.put(testData.medicineId, testData),
+      ).thenAnswer((_) async => true);
 
       // act
       final result = await testDataLocalDataSourceImpl.updateMedicine(testData);
@@ -161,18 +173,20 @@ void main() {
       verify(mockBox.put(testData.medicineId, testData)).called(1);
     });
 
-    test('should throw a CacheFailure when updating a testData fails',
-        () async {
-      // arrange
-      when(mockBox.put(testData.medicineId, testData)).thenThrow(Exception());
+    test(
+      'should throw a CacheFailure when updating a testData fails',
+      () async {
+        // arrange
+        when(mockBox.put(testData.medicineId, testData)).thenThrow(Exception());
 
-      // act
-      final call = testDataLocalDataSourceImpl.updateMedicine(testData);
+        // act
+        final call = testDataLocalDataSourceImpl.updateMedicine(testData);
 
-      // assert
-      expect(() async => call, throwsA(isA<CacheFailure>()));
-      verify(mockBox.put(testData.medicineId, testData)).called(1);
-    });
+        // assert
+        expect(() async => call, throwsA(isA<CacheFailure>()));
+        verify(mockBox.put(testData.medicineId, testData)).called(1);
+      },
+    );
   });
 
   group('deleteMedicine', () {
@@ -181,26 +195,30 @@ void main() {
       when(mockBox.delete(testData.medicineId)).thenAnswer((_) async => true);
 
       // act
-      final result =
-          await testDataLocalDataSourceImpl.deleteMedicine(testData.medicineId);
+      final result = await testDataLocalDataSourceImpl.deleteMedicine(
+        testData.medicineId,
+      );
 
       // assert
       expect(result, true);
       verify(mockBox.delete(testData.medicineId)).called(1);
     });
 
-    test('should throw a CacheFailure when deleting a testData by id fails',
-        () async {
-      // arrange
-      when(mockBox.delete(testData.medicineId)).thenThrow(Exception());
+    test(
+      'should throw a CacheFailure when deleting a testData by id fails',
+      () async {
+        // arrange
+        when(mockBox.delete(testData.medicineId)).thenThrow(Exception());
 
-      // act
-      final call =
-          testDataLocalDataSourceImpl.deleteMedicine(testData.medicineId);
+        // act
+        final call = testDataLocalDataSourceImpl.deleteMedicine(
+          testData.medicineId,
+        );
 
-      // assert
-      expect(() async => call, throwsA(isA<CacheFailure>()));
-      verify(mockBox.delete(testData.medicineId)).called(1);
-    });
+        // assert
+        expect(() async => call, throwsA(isA<CacheFailure>()));
+        verify(mockBox.delete(testData.medicineId)).called(1);
+      },
+    );
   });
 }

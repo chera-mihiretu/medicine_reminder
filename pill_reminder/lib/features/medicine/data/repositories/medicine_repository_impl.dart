@@ -20,6 +20,9 @@ class MedicineRepositoryImpl extends MedicineRepository {
 
       return Right(added);
     } catch (e) {
+      if (e is Failure) {
+        return Left(CacheFailure(message: e.message));
+      }
       return Left(CacheFailure(message: e.toString()));
     }
   }
@@ -52,7 +55,10 @@ class MedicineRepositoryImpl extends MedicineRepository {
       log(result.toString());
       return Right(result.map((e) => e.toEntity()).toList());
     } catch (e) {
-      return Left(CacheFailure(message: (e as Failure).message));
+      if (e is Failure) {
+        Left(CacheFailure(message: e.message));
+      }
+      return Left(CacheFailure(message: e.toString()));
     }
   }
 

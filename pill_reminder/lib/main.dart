@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pill_reminder/cores/theme/color_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
@@ -8,6 +7,8 @@ import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_screen.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/edit_medicine_page.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/medicine_taken.dart';
+import 'package:pill_reminder/features/notification/domain/usecases/schedule_notification_usecase.dart';
 import 'package:pill_reminder/features/notification/presentation/bloc/notification_bloc.dart';
 import 'package:pill_reminder/injection.dart';
 import 'package:pill_reminder/splash_screen.dart';
@@ -20,6 +21,9 @@ void main() async {
   //! This is for requesting permission on IOS wich not going to be visible on android mobiles
   // Initialize notification
   await init();
+
+  locator<ScheduleNotificationUsecase>().execute();
+
   runApp(
     // DevicePreview(
     //   enabled: !relaseMode,
@@ -76,6 +80,7 @@ class MyApp extends StatelessWidget {
                   medicineIndex:
                       ModalRoute.of(context)!.settings.arguments as int,
                 ),
+            MedicineTaken.routeName: (context) => const MedicineTaken(),
             // Add other routes here
           },
         ),

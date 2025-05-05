@@ -1,155 +1,73 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'dart:math';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
+import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
+import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart';
-import 'package:pill_reminder/features/notification/data/callbacks/notification_callback.dart';
+import 'package:pill_reminder/features/notification/data/models/notification_model.dart';
 import 'package:pill_reminder/features/notification/domain/entities/notifaction_enums.dart';
-import 'package:pill_reminder/features/notification/domain/entities/notification_entity.dart';
 import 'package:pill_reminder/features/notification/domain/repositories/notification_repository.dart';
 import 'package:pill_reminder/features/notification/domain/repositories/trigger_notification_repository.dart';
 
 class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
   GetAllMedicineUsecase getAllMedicineUsecase;
   NotificationRepository notificationRepository;
+  MedicineLocalDataSource medicineLocalDataSource;
   TriggerNotificationRepositoryImpl({
     required this.getAllMedicineUsecase,
     required this.notificationRepository,
+    required this.medicineLocalDataSource,
   });
 
   @override
-  Future<Either<Failure, bool>> triggerNotification() async {
+  Future<Either<Failure, bool>> scheduleNotification() async {
     final result = await getAllMedicineUsecase.execute();
     return result.fold((failure) => Left(failure), (medicines) async {
-      final currentTime = TimeOfDay.now();
-      final nowInMinutes = currentTime.hour * 60 + currentTime.minute;
-
       for (MedicineEntity medicine in medicines) {
-        if (medicine.interval != null) {
-          TimeOfDay last = medicine.lastTriggered;
-          final lastInMinutes = last.hour * 60 + last.minute;
-          final diff = nowInMinutes - lastInMinutes;
-          final remainingTime = medicine.interval! - diff;
-          if (remainingTime > 0 && remainingTime <= 10) {
-            NotificationEntity notification = NotificationEntity(
-              id: DateTime.now().millisecondsSinceEpoch,
-              title: 'Don\'t Forget Your Medicine',
-              body: 'Time to take ${medicine.name}',
-              payload: medicine.medicineId,
-              scheduledTime: DateTime.now(),
-              imageUrl: '',
-              isRecurring: false,
-              fullScreen: true,
-              sound: 'default',
-              channelId: 'reminder',
-              channelName: 'Reminder',
-              priority: MyPriority.high,
-              importance: MyImportance.high,
-            );
-            await AndroidAlarmManager.oneShot(
-              Duration(minutes: remainingTime),
-              (medicine.medicineId.hashCode + 1).abs() % 2147483647,
-              () => showNotificationCallback(notification),
-            );
-          }
-        } else {
-          for (var time in medicine.time!) {
-            final scheduledMinutes = time.hour * 60 + time.minute;
-            int difference = scheduledMinutes - nowInMinutes;
-            if (difference <= 10) {
-              NotificationEntity notification = NotificationEntity(
-                id: DateTime.now().millisecondsSinceEpoch,
-                title: 'Don\'t Forget Your Medicine',
-                body: 'Time to take ${medicine.name}',
-                payload: medicine.medicineId,
-                scheduledTime: DateTime.now(),
-                imageUrl: '',
-                isRecurring: false,
+        if (medicine.time != null && medicine.time!.isNotEmpty) {
+          // MedicineModel newMed = MedicineModel(
+          //   medicineId: medicine.medicineId,
+          //   name: medicine.name,
+          //   startDate: medicine.startDate,
+          //   medicineAmount: medicine.medicineAmount,
+          //   medicineTaken: medicine.medicineTaken,
+          //   lastTriggered: medicine.lastTriggered,
+          //   scheduled: true,
+          // );
+
+          // medicineLocalDataSource.updateMedicine(newMed);
+          for (TimeOfDay time in medicine.time!) {
+            int id =
+                int.parse('${medicine.medicineId}${time.hour}${time.minute}') %
+                (pow(10, 9).toInt() + 7);
+            notificationRepository.scheduleNotification(
+              NotificationModel(
+                id: id,
+                title: 'It is time take your medicine: ${medicine.name}',
+                body:
+                    'You have taken ${medicine.medicineTaken.toString()} out of ${medicine.medicineAmount.toString()} dont forget to take it, Click the below button if you have taken it',
+                payload: '${medicine.medicineId}:${time.hour}:${time.minute}',
+                scheduledTime: DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                  time.hour,
+                  time.minute,
+                ),
+                isRecurring: true,
+                priority: MyPriority.high,
+                importance: MyImportance.high,
                 fullScreen: true,
-                sound: 'default',
-                channelId: 'reminder',
-                channelName: 'Reminder',
-                priority: MyPriority.high,
-                importance: MyImportance.high,
-              );
-              await AndroidAlarmManager.oneShot(
-                Duration(minutes: difference),
-                (medicine.medicineId.hashCode + 2).abs() % 2147483647,
-                () => showNotificationCallback(notification),
-              );
-            }
-          }
-        }
-      }
-      return const Right(true);
-    });
-  }
-
-  @override
-  Future<Either<Failure, bool>> triggerNotificationTenMinuteBefore() async {
-    final result = await getAllMedicineUsecase.execute();
-    return result.fold((failure) => Left(failure), (medicines) async {
-      final currentTime = TimeOfDay.now();
-      final nowInMinutes = currentTime.hour * 60 + currentTime.minute;
-
-      for (MedicineEntity medicine in medicines) {
-        if (medicine.interval != null && medicine.interval != -1) {
-          TimeOfDay last = medicine.lastTriggered;
-          final lastInMinutes = last.hour * 60 + last.minute;
-          final diff = nowInMinutes - lastInMinutes;
-          final remainingTime = medicine.interval! - diff;
-          if (remainingTime > 0 && remainingTime >= 10 && remainingTime <= 20) {
-            NotificationEntity notification = NotificationEntity(
-              id: DateTime.now().millisecondsSinceEpoch,
-              title: 'Don\'t Forget Your Medicine',
-              body: 'Time to take ${medicine.name}',
-              payload: medicine.medicineId,
-              scheduledTime: DateTime.now(),
-              imageUrl: '',
-              isRecurring: false,
-              fullScreen: false,
-              sound: 'default',
-              channelId: 'reminder',
-              channelName: 'Reminder',
-              priority: MyPriority.high,
-              importance: MyImportance.high,
-            );
-            await AndroidAlarmManager.oneShot(
-              Duration(minutes: remainingTime - 10),
-              (medicine.medicineId.hashCode + 3).abs() % 2147483647,
-              () => showNotificationCallback(notification),
+              ),
             );
           }
-        } else {
-          for (var time in medicine.time!) {
-            final scheduledMinutes = time.hour * 60 + time.minute;
-            int difference = scheduledMinutes - nowInMinutes;
-            if (difference < 20 && difference > 10) {
-              NotificationEntity notification = NotificationEntity(
-                id: DateTime.now().millisecondsSinceEpoch,
-                title: 'Don\'t Forget Your Medicine',
-                body: 'Time to take ${medicine.name}',
-                payload: medicine.medicineId,
-                scheduledTime: DateTime.now(),
-                imageUrl: '',
-                isRecurring: false,
-                fullScreen: false,
-                sound: 'default',
-                channelId: 'reminder',
-                channelName: 'Reminder',
-                priority: MyPriority.high,
-                importance: MyImportance.high,
-              );
-              await AndroidAlarmManager.oneShot(
-                Duration(minutes: difference - 10),
-                (medicine.medicineId.hashCode + 4).abs() % 2147483647,
-                () => showNotificationCallback(notification),
-              );
-            }
-          }
-        }
+          // TODO : Schedule for recurring notifications
+        } else {}
       }
+
       return const Right(true);
     });
   }

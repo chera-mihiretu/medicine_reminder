@@ -30,13 +30,11 @@ class MedicineLocalDataSourceImpl extends MedicineLocalDataSource {
   @override
   Future<MedicineModel> getMedicine(String id) async {
     try {
-      final MedicineModel? data = medicineStorage.get(id);
-
-      if (data == null) {
-        throw const CacheFailure(message: "Data not found");
-      } else {
-        return data;
+      final medicine = medicineStorage.get(id);
+      if (medicine == null) {
+        throw CacheFailure(message: 'Medicine not found');
       }
+      return medicine;
     } catch (e) {
       throw CacheFailure(message: e.toString());
     }
@@ -44,13 +42,10 @@ class MedicineLocalDataSourceImpl extends MedicineLocalDataSource {
 
   @override
   Future<List<MedicineModel>> getMedicines() async {
-    log(medicineStorage.isOpen.toString());
     try {
-      final List<MedicineModel> data = medicineStorage.values.toList();
-      log(data.toString());
-      return data;
+      return medicineStorage.values.toList();
     } catch (e) {
-      throw CacheFailure(message: (e as Failure).message);
+      throw CacheFailure(message: e.toString());
     }
   }
 

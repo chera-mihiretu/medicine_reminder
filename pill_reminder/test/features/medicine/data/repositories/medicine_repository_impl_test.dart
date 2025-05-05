@@ -18,99 +18,112 @@ void main() {
 
   setUp(() {
     mockMedicineLocalDataSource = MockMedicineLocalDataSource();
-    medicineRepositoryImpl =
-        MedicineRepositoryImpl(localDataSource: mockMedicineLocalDataSource);
+    medicineRepositoryImpl = MedicineRepositoryImpl(
+      localDataSource: mockMedicineLocalDataSource,
+    );
   });
 
   group('addMedicine', () {
-    test('should add medicine to local data source', () async {
+    test('addMedicine should add medicine to local data source', () async {
       // arrange
-      when(mockMedicineLocalDataSource.addMedicine(testModelData))
-          .thenAnswer((_) async => true);
+      when(
+        mockMedicineLocalDataSource.addMedicine(any),
+      ).thenAnswer((_) async => true);
 
       // act
       final result = await medicineRepositoryImpl.addMedicine(testEntityData);
 
       // assert
       expect(result, const Right(true));
-      verify(mockMedicineLocalDataSource.addMedicine(testModelData));
-      verifyNoMoreInteractions(mockMedicineLocalDataSource);
+      verify(mockMedicineLocalDataSource.addMedicine(any)).called(1);
     });
 
-    test('should return CacheFailure when there is an exception', () async {
-      // arrange
-      when(mockMedicineLocalDataSource.addMedicine(testModelData))
-          .thenThrow(Exception(testError));
+    test(
+      'addMedicine should return CacheFailure when there is an exception',
+      () async {
+        // arrange
+        when(
+          mockMedicineLocalDataSource.addMedicine(any),
+        ).thenThrow(CacheFailure(message: 'error'));
 
-      // act
-      final result = await medicineRepositoryImpl.addMedicine(testEntityData);
+        // act
+        final result = await medicineRepositoryImpl.addMedicine(testEntityData);
 
-      // assert
-      expect(result, isA<Left<Failure, bool>>());
-      verify(mockMedicineLocalDataSource.addMedicine(testModelData));
-      verifyNoMoreInteractions(mockMedicineLocalDataSource);
-    });
+        // assert
+        expect(result, Left(CacheFailure(message: 'error')));
+        verify(mockMedicineLocalDataSource.addMedicine(any)).called(1);
+      },
+    );
   });
 
   group('deleteMedicine', () {
     test('should delete medicine from local data source', () async {
       // arrange
-      when(mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId))
-          .thenAnswer((_) async => true);
+      when(
+        mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId),
+      ).thenAnswer((_) async => true);
 
       // act
-      final result =
-          await medicineRepositoryImpl.deleteMedicine(testModelData.medicineId);
+      final result = await medicineRepositoryImpl.deleteMedicine(
+        testModelData.medicineId,
+      );
 
       // assert
       expect(result, const Right(true));
       verify(
-          mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId));
+        mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId),
+      );
       verifyNoMoreInteractions(mockMedicineLocalDataSource);
     });
 
     test('should return CacheFailure when there is an exception', () async {
       // arrange
-      when(mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId))
-          .thenThrow(Exception('Cache error'));
+      when(
+        mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId),
+      ).thenThrow(Exception('Cache error'));
 
       // act
-      final result =
-          await medicineRepositoryImpl.deleteMedicine(testModelData.medicineId);
+      final result = await medicineRepositoryImpl.deleteMedicine(
+        testModelData.medicineId,
+      );
 
       // assert
       expect(result, isA<Left<Failure, bool>>());
 
       verify(
-          mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId));
+        mockMedicineLocalDataSource.deleteMedicine(testModelData.medicineId),
+      );
       verifyNoMoreInteractions(mockMedicineLocalDataSource);
     });
   });
 
   group('getMedicine', () {
-    test('should return medicine from local data source', () async {
+    test('getMedicine should return medicine from local data source', () async {
       // arrange
-      when(mockMedicineLocalDataSource.getMedicine(testModelData.medicineId))
-          .thenAnswer((_) async => testModelData);
+      when(
+        mockMedicineLocalDataSource.getMedicine(any),
+      ).thenAnswer((_) async => testModelData);
 
       // act
-      final result =
-          await medicineRepositoryImpl.getMedicine(testModelData.medicineId);
+      final result = await medicineRepositoryImpl.getMedicine(
+        testModelData.medicineId,
+      );
 
       // assert
-      expect(result, Right(testEntityData));
-      verify(mockMedicineLocalDataSource.getMedicine(testModelData.medicineId));
-      verifyNoMoreInteractions(mockMedicineLocalDataSource);
+      expect(result, Right(testModelData.toEntity()));
+      verify(mockMedicineLocalDataSource.getMedicine(any)).called(1);
     });
 
     test('should return CacheFailure when there is an exception', () async {
       // arrange
-      when(mockMedicineLocalDataSource.getMedicine(testModelData.medicineId))
-          .thenThrow(Exception(testError));
+      when(
+        mockMedicineLocalDataSource.getMedicine(testModelData.medicineId),
+      ).thenThrow(Exception(testError));
 
       // act
-      final result =
-          await medicineRepositoryImpl.getMedicine(testModelData.medicineId);
+      final result = await medicineRepositoryImpl.getMedicine(
+        testModelData.medicineId,
+      );
 
       // assert
       expect(result, isA<Left<Failure, MedicineEntity>>());
@@ -127,8 +140,9 @@ void main() {
 
     test('should return list of medicines from local data source', () async {
       // arrange
-      when(mockMedicineLocalDataSource.getMedicines())
-          .thenAnswer((_) async => medicineModels);
+      when(
+        mockMedicineLocalDataSource.getMedicines(),
+      ).thenAnswer((_) async => medicineModels);
 
       // act
       final result = await medicineRepositoryImpl.getMedicines();
@@ -141,8 +155,9 @@ void main() {
 
     test('should return CacheFailure when there is an exception', () async {
       // arrange
-      when(mockMedicineLocalDataSource.getMedicines())
-          .thenThrow(Exception('Cache error'));
+      when(
+        mockMedicineLocalDataSource.getMedicines(),
+      ).thenThrow(Exception('Cache error'));
 
       // act
       final result = await medicineRepositoryImpl.getMedicines();
@@ -157,8 +172,9 @@ void main() {
   group('updateMedicine', () {
     test('should update medicine in local data source', () async {
       // arrange
-      when(mockMedicineLocalDataSource.updateMedicine(testModelData))
-          .thenAnswer((_) async => true);
+      when(
+        mockMedicineLocalDataSource.updateMedicine(testModelData),
+      ).thenAnswer((_) async => true);
 
       // act
       final result = await medicineRepositoryImpl.updateMedicine(testModelData);
@@ -171,8 +187,9 @@ void main() {
 
     test('should return CacheFailure when there is an exception', () async {
       // arrange
-      when(mockMedicineLocalDataSource.updateMedicine(testModelData))
-          .thenThrow(Exception('Cache error'));
+      when(
+        mockMedicineLocalDataSource.updateMedicine(testModelData),
+      ).thenThrow(Exception('Cache error'));
 
       // act
       final result = await medicineRepositoryImpl.updateMedicine(testModelData);

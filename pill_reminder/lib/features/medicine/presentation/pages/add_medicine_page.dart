@@ -10,6 +10,8 @@ import 'package:pill_reminder/features/medicine/presentation/widgets/custom_inpu
 import 'package:pill_reminder/features/medicine/presentation/widgets/loading_popup.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/medicine_mode.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/medicine_time.dart';
+import 'package:pill_reminder/features/notification/presentation/bloc/notification_bloc.dart';
+import 'package:pill_reminder/features/notification/presentation/bloc/notification_event.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -147,6 +149,10 @@ class AddMedicinePage extends StatelessWidget {
                               lastTriggered: TimeOfDay.now(),
                             ),
                           );
+
+                          BlocProvider.of<NotificationBloc>(
+                            context,
+                          ).add(ScheduleNotificationEvent());
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(20),
