@@ -6,7 +6,6 @@ import 'package:pill_reminder/features/notification/presentation/bloc/notificati
 import 'package:pill_reminder/features/notification/presentation/bloc/notification_event.dart';
 import 'package:pill_reminder/features/notification/presentation/bloc/notification_state.dart';
 import 'package:dartz/dartz.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz_data;
 
 import '../../../../mock/mock_generator.mocks.dart';

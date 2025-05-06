@@ -1,5 +1,3 @@
-import 'dart:developer' as dev;
-
 import 'package:dartz/dartz.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 
@@ -21,7 +19,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
     NotificationEntity notification,
   ) async {
     try {
-      dev.log('Scheduling notification for ${notification.scheduledTime}');
       final tz.TZDateTime scheduledDate = tz.TZDateTime.from(
         notification.scheduledTime,
         tz.local,
@@ -68,12 +65,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
-      dev.log(
-        'Notification scheduled for ${notification.scheduledTime}',
-        name: 'NotificationRepositoryImpl',
-      );
     } catch (e) {
-      dev.log(e.toString());
       return Left(PermissionFailure(message: e.toString()));
     }
     return const Right(true);

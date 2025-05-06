@@ -50,6 +50,7 @@ dependencies:
   hive: ^2.2.3
   flutter_timezone: ^4.1.0
   timezone: ^0.10.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

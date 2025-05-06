@@ -4,7 +4,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
-import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
 import 'package:pill_reminder/features/medicine/domain/entities/medicine_entity.dart';
 import 'package:pill_reminder/features/medicine/domain/usecases/get_all_medicine_usecase.dart';
 import 'package:pill_reminder/features/notification/data/models/notification_model.dart';
@@ -54,8 +53,12 @@ class TriggerNotificationRepositoryImpl extends TriggerNotificationRepository {
                   DateTime.now().year,
                   DateTime.now().month,
                   DateTime.now().day,
-                  time.hour,
-                  time.minute,
+                  //! This is for debugging purposes
+                  DateTime.now().hour,
+                  DateTime.now().minute,
+                  DateTime.now().second + 10,
+                  // time.hour,
+                  // time.minute,
                 ),
                 isRecurring: true,
                 priority: MyPriority.high,

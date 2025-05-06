@@ -5,9 +5,6 @@ import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_state.dart';
 import 'package:pill_reminder/features/medicine/presentation/widgets/icon_and_info.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/edit_medicine_page.dart';
-import 'package:pill_reminder/features/notification/domain/entities/notifaction_enums.dart';
-import 'package:pill_reminder/features/notification/presentation/bloc/notification_bloc.dart';
-import 'package:pill_reminder/features/notification/presentation/bloc/notification_event.dart';
 import 'package:provider/provider.dart';
 
 class MedicineDetail extends StatelessWidget {

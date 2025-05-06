@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pill_reminder/cores/theme/color_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
@@ -22,19 +23,31 @@ void main() async {
   // Initialize notification
   await init();
 
+  // Handle notification when app is launched from terminated state
+  final notificationAppLaunchDetails =
+      await locator<FlutterLocalNotificationsPlugin>()
+          .getNotificationAppLaunchDetails();
+
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    notificationActionHandler(
+      notificationAppLaunchDetails!.notificationResponse!,
+    );
+  }
+
   locator<ScheduleNotificationUsecase>().execute();
 
   runApp(
     // DevicePreview(
     //   enabled: !relaseMode,
     //   builder: (context) => const
-    MyApp(),
+    MyApp(navState: locator<GlobalKey<NavigatorState>>()),
     // ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GlobalKey<NavigatorState> navState;
+  const MyApp({super.key, required this.navState});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +63,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Pill Reminder',
+          navigatorKey: navState,
           builder: (context, child) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               final brightness = MediaQuery.of(context).platformBrightness;

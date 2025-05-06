@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +29,9 @@ import 'package:pill_reminder/features/notification/presentation/bloc/notificati
 final locator = GetIt.instance;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+// Add this at the top level
+NotificationResponse? pendingNotification;
+
 Future<void> init() async {
   //! THeme provider
   locator.registerLazySingleton<ThemeProvider>(
@@ -39,6 +42,8 @@ Future<void> init() async {
   await AndroidAlarmManager.initialize();
   Hive.registerAdapter(MedicineModelAdapter());
   Hive.registerAdapter(TimeOfDayAdapter());
+
+  locator.registerLazySingleton(() => GlobalKey<NavigatorState>());
   final medicineBox = await Hive.openBox<MedicineModel>(AppData.medicineBox);
   locator.registerLazySingleton<Box<MedicineModel>>(() => medicineBox);
   //! local data source
@@ -60,7 +65,13 @@ Future<void> init() async {
           DarwinNotificationCategory(
             'medicine_notification',
             actions: <DarwinNotificationAction>[
-              DarwinNotificationAction.plain('take_medicine', 'Taken'),
+              DarwinNotificationAction.plain(
+                'take_medicine',
+                'Taken',
+                options: <DarwinNotificationActionOption>{
+                  DarwinNotificationActionOption.foreground,
+                },
+              ),
             ],
             options: <DarwinNotificationCategoryOption>{
               DarwinNotificationCategoryOption.hiddenPreviewShowTitle,
@@ -78,10 +89,10 @@ Future<void> init() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
-    onDidReceiveNotificationResponse: (NotificationResponse response) async {
-      // Handle when notification is tapped or action is pressed
-      handleNotificationAction;
+    onDidReceiveNotificationResponse: (NotificationResponse response) {
+      notificationActionHandler(response);
     },
+    onDidReceiveBackgroundNotificationResponse: notificationActionHandler,
   );
 
   locator.registerLazySingleton<FlutterLocalNotificationsPlugin>(
@@ -128,45 +139,84 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => NotificationBloc(scheduleNotificationUsecase: locator()),
   );
+
+  // Add this after all initialization is complete
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    handlePendingNotification();
+  });
 }
 
 @pragma('vm:entry-point')
-void handleNotificationAction(NotificationResponse response) async {
-  if (response.payload != null) {
-    // Parse the payload which contains medicineId:hour:minute
-    final parts = response.payload!.split(':');
-    if (parts.length == 3) {
-      final medicineId = parts[0];
+void notificationActionHandler(NotificationResponse response) {
+  dev.log('Notification action received: $response');
 
-      // Get the medicine from local storage
-      final medicineBox = locator<Box<MedicineModel>>();
-      final medicine = medicineBox.get(medicineId);
+  try {
+    final GlobalKey<NavigatorState> navigatorKey =
+        locator<GlobalKey<NavigatorState>>();
 
-      if (medicine != null) {
-        // Update medicine taken count
-        final updatedMedicine = MedicineModel(
-          medicineId: medicine.medicineId,
-          name: medicine.name,
-          startDate: medicine.startDate,
-          medicineAmount: medicine.medicineAmount,
-          medicineTaken: medicine.medicineTaken + 1,
-          lastTriggered: TimeOfDay(
-            hour: int.parse(parts[1]),
-            minute: int.parse(parts[2]),
-          ),
-          scheduled: medicine.scheduled,
-          time: medicine.time,
-        );
+    if (navigatorKey.currentState == null) {
+      // Store the notification for later if app is not running
+      pendingNotification = response;
+      dev.log('App is not running, storing notification for later');
+      return;
+    }
 
-        // Save updated medicine
-        await medicineBox.put(medicineId, updatedMedicine);
-        log('Flutter action button pressed: $medicine');
-        // Navigate to medicine details page
-        navigatorKey.currentState?.pushNamed(
-          MedicineTaken.routeName,
-          arguments: updatedMedicine,
-        );
+    if (response.payload != null) {
+      // Parse the payload which contains medicineId:hour:minute
+      final parts = response.payload!.split(':');
+      if (parts.length == 3) {
+        final medicineId = parts[0];
+
+        // Get the medicine from local storage
+        final medicineBox = locator<Box<MedicineModel>>();
+        final medicine = medicineBox.get(medicineId);
+
+        if (medicine != null) {
+          // Update medicine taken count
+          final updatedMedicine = MedicineModel(
+            medicineId: medicine.medicineId,
+            name: medicine.name,
+            startDate: medicine.startDate,
+            medicineAmount: medicine.medicineAmount,
+            medicineTaken: medicine.medicineTaken + 1,
+            lastTriggered: TimeOfDay(
+              hour: int.parse(parts[1]),
+              minute: int.parse(parts[2]),
+            ),
+            scheduled: medicine.scheduled,
+            time: medicine.time,
+          );
+
+          // Check if medicine is completed
+          if (updatedMedicine.medicineTaken >= updatedMedicine.medicineAmount) {
+            // Delete the medicine if all doses are taken
+            medicineBox.delete(medicineId);
+            dev.log('Medicine completed and deleted: ${medicine.name}');
+          } else {
+            // Save updated medicine if not completed
+            medicineBox.put(medicineId, updatedMedicine);
+          }
+
+          dev.log('Flutter action button pressed: $medicine');
+
+          navigatorKey.currentState?.pushNamed(
+            MedicineTaken.routeName,
+            arguments: updatedMedicine,
+          );
+        }
       }
     }
+  } catch (e) {
+    dev.log('Error handling notification: $e');
+  }
+}
+
+// Add this function to handle pending notifications
+void handlePendingNotification() {
+  dev.log('Handling pending notification');
+  if (pendingNotification != null) {
+    dev.log('Handling pending notification');
+    notificationActionHandler(pendingNotification!);
+    pendingNotification = null;
   }
 }
