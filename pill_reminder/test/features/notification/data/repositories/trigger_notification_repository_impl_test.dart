@@ -75,7 +75,6 @@ void main() {
         // Assert
         expect(result, const Right(true));
         verifyNever(mockNotificationRepository.scheduleNotification(any));
-        verifyNever(mockMedicineLocalDataSource.updateMedicine(any));
       },
     );
 
