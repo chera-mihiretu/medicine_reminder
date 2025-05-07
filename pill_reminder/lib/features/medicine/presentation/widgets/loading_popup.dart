@@ -17,7 +17,7 @@ class LoadingPopup extends StatelessWidget {
           height: MediaQuery.of(context).size.width / 2,
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.all(Radius.circular(50)),
+            borderRadius: const BorderRadius.all(Radius.circular(50)),
             boxShadow: [
               BoxShadow(color: colors.shadow, spreadRadius: 1, blurRadius: 1),
             ],
@@ -26,9 +26,9 @@ class LoadingPopup extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SpinKitWave(color: colors.primaryButton, size: 50),
-              SizedBox(height: 10),
-              Text('Loading...'),
+              SpinKitRipple(color: colors.primaryButton, size: 50),
+              const SizedBox(height: 10),
+              Text('Loading...', style: TextStyle(color: colors.text)),
             ],
           ),
         ),

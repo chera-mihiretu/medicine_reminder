@@ -20,7 +20,7 @@ class MedicineModel extends MedicineEntity {
   @override
   @HiveField(2)
   // ignore: overridden_fields
-  final int? interval;
+  final double? interval;
 
   @override
   @HiveField(3)

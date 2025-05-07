@@ -28,7 +28,6 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       emit(MedicineLoadingState());
 
       final result = await getAllMedicineUsecase.execute();
-
       result.fold((failure) => emit(MedicineErrorState(failure.message)), (
         medicines,
       ) {
@@ -38,6 +37,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
 
     on<GetMedicineEvent>((event, emit) async {
       emit(MedicineLoadingState());
+
       final result = await getMadicineUsecase.execute(event.medicineId);
 
       result.fold((failure) => emit(MedicineErrorState(failure.message)), (

@@ -7,10 +7,13 @@ import 'package:provider/provider.dart';
 // ignore: must_be_immutable
 class MedicineTime extends StatefulWidget {
   final TextEditingController intervalController;
+  final TextEditingController lastTakenController;
   final List<TextEditingController> specificTimeCotrollers;
+
   final List<TimeOfDay> selectedTime;
   MedicineMode medicineMode;
   final Function onModeChange;
+  final List<TimeOfDay> lastTakenTime;
 
   MedicineTime({
     super.key,
@@ -19,6 +22,8 @@ class MedicineTime extends StatefulWidget {
     this.medicineMode = MedicineMode.interval,
     required this.onModeChange,
     required this.selectedTime,
+    required this.lastTakenController,
+    required this.lastTakenTime,
   });
 
   @override
@@ -35,6 +40,18 @@ class _MedicineTimeState extends State<MedicineTime> {
     if (picked != null) {
       setState(() {
         widget.selectedTime[index] = picked;
+      });
+    }
+  }
+
+  Future<void> pickTimeForLastTime() async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: widget.lastTakenTime[0],
+    );
+    if (picked != null) {
+      setState(() {
+        widget.lastTakenTime[0] = picked;
       });
     }
   }
@@ -59,7 +76,7 @@ class _MedicineTimeState extends State<MedicineTime> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: const EdgeInsets.symmetric(
-                  vertical: 20,
+                  vertical: 10,
                   horizontal: 30,
                 ),
                 backgroundColor:
@@ -75,7 +92,7 @@ class _MedicineTimeState extends State<MedicineTime> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
-                  vertical: 20,
+                  vertical: 10,
                   horizontal: 30,
                 ),
                 backgroundColor:
@@ -112,6 +129,30 @@ class _MedicineTimeState extends State<MedicineTime> {
                     CustomInput(
                       controller: widget.intervalController,
                       hintText: 'Medicine Interval',
+                    ),
+                    CustomInput(
+                      controller: widget.lastTakenController,
+                      hintText: 'Last taken',
+                      onTap: () async {
+                        await pickTimeForLastTime();
+                        int hour = widget.lastTakenTime[0].hour;
+                        String period =
+                            widget.lastTakenTime[0].period
+                                .toString()
+                                .split('.')
+                                .last
+                                .toUpperCase();
+
+                        // Convert to 12-hour format
+                        if (hour > 12) {
+                          hour -= 12;
+                        } else if (hour == 0) {
+                          hour = 12;
+                        }
+
+                        widget.lastTakenController.text =
+                            '$hour:${widget.lastTakenTime[0].minute.toString().padLeft(2, '0')} $period';
+                      },
                     ),
                   ],
                 )
@@ -164,7 +205,7 @@ class _MedicineTimeState extends State<MedicineTime> {
                               width: 2,
                             ),
                             padding: const EdgeInsets.symmetric(
-                              vertical: 20,
+                              vertical: 10,
                               horizontal: 30,
                             ),
                             shape: RoundedRectangleBorder(
@@ -187,7 +228,7 @@ class _MedicineTimeState extends State<MedicineTime> {
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                              vertical: 20,
+                              vertical: 10,
                               horizontal: 30,
                             ),
                             backgroundColor:

@@ -18,14 +18,23 @@ class MedicineDetail extends StatelessWidget {
     return Scaffold(
       backgroundColor: colors.background,
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: colors.background,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_ios_new_outlined, color: colors.text),
         ),
-        title: Text('Medicine Detail', style: TextStyle(color: colors.text)),
-        backgroundColor: colors.background,
+        title: Text(
+          'Medicine Detail',
+          style: TextStyle(
+            color: colors.text,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
       ),
       body: BlocBuilder<MedicineBloc, MedicineState>(
         builder: (context, state) {
@@ -37,28 +46,41 @@ class MedicineDetail extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Card(
-                      color: colors.card,
-                      shadowColor: colors.shadow,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [colors.gradientStart, colors.gradientEnd],
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colors.buttonShadow,
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                        ],
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(24.0),
                             child: Stack(
                               alignment: Alignment.topRight,
                               children: [
                                 Container(
                                   margin: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                    color: colors.primaryButton,
-                                    borderRadius: BorderRadius.circular(20),
+                                    color: colors.glassBackground,
+                                    borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                      color: colors.glassBorder,
+                                      width: 1,
+                                    ),
                                   ),
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(24.0),
                                   child: Icon(
                                     Icons.health_and_safety,
                                     size: 80,
@@ -67,24 +89,30 @@ class MedicineDetail extends StatelessWidget {
                                 ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 5.0,
+                                    horizontal: 16,
+                                    vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
+                                    color: colors.glassBackground,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: colors.glassBorder,
+                                      width: 1,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: colors.shadow,
+                                        color: colors.cardShadow,
+                                        blurRadius: 10,
                                         spreadRadius: 2,
-                                        blurRadius: 3,
                                       ),
                                     ],
-                                    color: colors.primaryButton,
-                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
                                     'Active',
                                     style: TextStyle(
                                       color: colors.primaryButtonText,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
                                     ),
                                   ),
                                 ),
@@ -94,15 +122,16 @@ class MedicineDetail extends StatelessWidget {
                           Text(
                             medicine.name,
                             style: TextStyle(
-                              color: colors.text,
-                              fontSize: 24,
+                              color: colors.primaryButtonText,
+                              fontSize: 28,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
+                              horizontal: 24.0,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,35 +139,53 @@ class MedicineDetail extends StatelessWidget {
                                 Text(
                                   'Progress',
                                   style: TextStyle(
-                                    color: colors.greyText,
+                                    color: colors.primaryButtonText.withOpacity(
+                                      0.8,
+                                    ),
                                     fontSize: 16,
-                                    fontWeight: FontWeight.normal,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                Text(
-                                  '${DateTime.now().difference(medicine.startDate).inDays} Days',
-                                  style: TextStyle(
-                                    color: colors.primaryButton,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 6,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: colors.glassBackground,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: colors.glassBorder,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${medicine.startDate.difference(DateTime.now()).inDays + 1} Day${medicine.startDate.difference(DateTime.now()).inDays + 1 == 1 ? '' : 's'}',
+                                    style: TextStyle(
+                                      color: colors.primaryButtonText,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: LinearProgressIndicator(
-                              value:
-                                  (medicine.medicineTaken * 100) /
-                                  medicine.medicineAmount /
-                                  100,
-                              backgroundColor: colors.progressBackground,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                colors.progressColor,
+                            padding: const EdgeInsets.all(24),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: LinearProgressIndicator(
+                                value:
+                                    (medicine.medicineTaken * 100) /
+                                    medicine.medicineAmount /
+                                    100,
+                                backgroundColor: colors.progressBackground,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  colors.progressColor,
+                                ),
+                                minHeight: 12,
                               ),
-                              minHeight: 10,
-                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                         ],
@@ -147,12 +194,17 @@ class MedicineDetail extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Card(
-                      color: colors.card,
-                      shadowColor: colors.shadow,
-                      elevation: 5,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colors.cardShadow,
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                        ],
                       ),
                       child: Column(
                         children: [
@@ -205,44 +257,38 @@ class MedicineDetail extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(
-                                EditMedicinePage.routeName,
-                                arguments: index,
-                              );
-                            },
-
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              backgroundColor: colors.primaryButton,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.edit,
-                                  color: colors.primaryButtonText,
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  'Edit Medicine',
-                                  style: TextStyle(
-                                    color: colors.primaryButtonText,
-                                  ),
-                                ),
-                              ],
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(
+                          EditMedicinePage.routeName,
+                          arguments: index,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        backgroundColor: colors.primaryButton,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 8,
+                        shadowColor: colors.buttonShadow,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.edit, color: colors.primaryButtonText),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Edit Medicine',
+                            style: TextStyle(
+                              color: colors.primaryButtonText,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

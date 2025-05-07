@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
@@ -23,8 +21,10 @@ class AddMedicinePage extends StatelessWidget {
   final TextEditingController totalAmountController = TextEditingController();
   final TextEditingController takenAmountController = TextEditingController();
   final TextEditingController specificTimeController = TextEditingController();
+  final TextEditingController lastTakenController = TextEditingController();
   final List<TextEditingController> specificTimeControllers = [];
   final List<TimeOfDay> selectedTime = [];
+  final List<TimeOfDay> lastTakenTime = [TimeOfDay.now()];
   MedicineMode medicineMode = MedicineMode.interval;
 
   AddMedicinePage({super.key});
@@ -42,7 +42,7 @@ class AddMedicinePage extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios_new, color: colors.icon),
         ),
         title: Text(
-          "Add Medicine",
+          'Add Medicine',
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: colors.text,
@@ -53,15 +53,14 @@ class AddMedicinePage extends StatelessWidget {
       backgroundColor: colors.background,
       body: BlocListener<MedicineBloc, MedicineState>(
         listener: (context, state) {
-          log(state.toString());
           if (state is MedicineErrorState) {
-          } else if (state is MedicineAddedState) {
-            Navigator.pop(context);
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text("Medicine Added")));
-          } else if (state is MedicineLoadingState) {
-            log('The add is Loading ');
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          } else if (state is MedicineAddedState) {
+            BlocProvider.of<MedicineBloc>(context).add(GetMedicineListEvent());
+            Navigator.pop(context);
+            Navigator.pop(context);
           }
         },
         child: Center(
@@ -83,13 +82,15 @@ class AddMedicinePage extends StatelessWidget {
                     children: [
                       CustomInput(
                         controller: medicineNameController,
-                        hintText: "Medicine Name",
+                        hintText: 'Medicine Name',
                       ),
 
                       // Display corresponding field based on selected mode
                       MedicineTime(
                         selectedTime: selectedTime,
                         medicineMode: medicineMode,
+                        lastTakenController: lastTakenController,
+                        lastTakenTime: lastTakenTime,
                         onModeChange: (newMode) {
                           medicineMode = newMode;
                         },
@@ -99,33 +100,40 @@ class AddMedicinePage extends StatelessWidget {
 
                       // Other inputs (if needed)
                       CustomInput(
-                        hintText: "Medicine Total Amount",
+                        hintText: 'Medicine Total Amount',
                         controller: totalAmountController,
+                        keyboardType: TextInputType.number,
                       ),
 
                       CustomInput(
                         controller: takenAmountController,
-                        hintText: "Medicine Taken Amount",
+                        hintText: 'Medicine Taken Amount',
+                        keyboardType: TextInputType.number,
                       ),
 
                       ElevatedButton(
-                        onPressed: () {
-                          int? interval;
+                        onPressed: () async {
+                          double? interval;
+
                           List<TimeOfDay>? specificTime;
 
                           if (medicineMode == MedicineMode.interval) {
                             if (intervalController.text.isEmpty) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Interval is required")),
+                                const SnackBar(
+                                  content: Text('Interval is required'),
+                                ),
                               );
                               return;
                             }
-                            interval = int.parse(intervalController.text);
+                            interval = double.parse(intervalController.text);
                           } else {
                             specificTime = selectedTime;
                           }
+                          await Future.delayed(const Duration(seconds: 2));
 
                           showDialog(
+                            // ignore: use_build_context_synchronously
                             context: context,
                             barrierDismissible: false,
                             builder: (context) {
@@ -133,6 +141,7 @@ class AddMedicinePage extends StatelessWidget {
                             },
                           );
 
+                          // ignore: use_build_context_synchronously
                           BlocProvider.of<MedicineBloc>(context).add(
                             AddMedicineEvent(
                               name: medicineNameController.text,
@@ -146,23 +155,27 @@ class AddMedicinePage extends StatelessWidget {
                                   takenAmountController.text.isEmpty
                                       ? 0
                                       : int.parse(takenAmountController.text),
-                              lastTriggered: TimeOfDay.now(),
+                              lastTriggered: lastTakenTime[0],
                             ),
                           );
 
                           BlocProvider.of<NotificationBloc>(
+                            // ignore: use_build_context_synchronously
                             context,
                           ).add(ScheduleNotificationEvent());
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 20,
+                          ),
                           backgroundColor: colors.primaryButton,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: Text(
-                          "Add Medicine",
+                          'Add Medicine',
                           style: TextStyle(color: colors.primaryButtonText),
                         ),
                       ),

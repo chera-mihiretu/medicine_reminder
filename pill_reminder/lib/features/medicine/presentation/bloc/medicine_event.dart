@@ -12,7 +12,7 @@ class GetMedicineListEvent extends MedicineEvent {}
 
 class AddMedicineEvent extends MedicineEvent {
   final String name;
-  final int? interval;
+  final double? interval;
   final List<TimeOfDay>? time;
   final DateTime startDate;
   final int medicineAmount;
@@ -51,7 +51,7 @@ class GetMedicineEvent extends MedicineEvent {
 class UpdataeMedicineEvent extends MedicineEvent {
   final String medicineId;
   final String name;
-  final int? interval;
+  final double? interval;
   final List<TimeOfDay>? time;
   final DateTime startDate;
   final int medicineAmount;

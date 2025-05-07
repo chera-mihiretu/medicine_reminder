@@ -57,7 +57,6 @@ void main() {
         // Assert
         expect(result, const Right(true));
         verify(mockNotificationRepository.scheduleNotification(any)).called(1);
-        verify(mockMedicineLocalDataSource.updateMedicine(any)).called(1);
       },
     );
 

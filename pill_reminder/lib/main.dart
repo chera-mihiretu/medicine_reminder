@@ -16,7 +16,7 @@ import 'package:pill_reminder/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  const relaseMode = false;
+  // const relaseMode = false;
 
   WidgetsFlutterBinding.ensureInitialized();
   //! This is for requesting permission on IOS wich not going to be visible on android mobiles

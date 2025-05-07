@@ -11,38 +11,39 @@ class CustomProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Provider.of<ThemeProvider>(context).colors;
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      LinearProgressIndicator(
-        minHeight: 10,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(100),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        LinearProgressIndicator(
+          minHeight: 10,
+          borderRadius: const BorderRadius.all(Radius.circular(100)),
+          color: color,
+          backgroundColor: colors.background,
+          value: percent / 100,
         ),
-        color: color,
-        backgroundColor: Theme.of(context).hoverColor,
-        value: percent / 100,
-      ),
-      const SizedBox(
-        height: 10,
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            percent == 100 ? 'Completed' : 'In progress',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: colors.text,
-                ),
-          ),
-          Text(
-            "$percent%",
-            style: TextStyle(
-              color: color,
-              fontSize: Theme.of(context).textTheme.bodyLarge?.fontSize,
-              fontWeight: FontWeight.bold,
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              percent == 100 ? 'Completed' : 'In progress',
+              style: TextStyle(
+                color: colors.text,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ],
-      )
-    ]);
+            Text(
+              '$percent%',
+              style: TextStyle(
+                color: color,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

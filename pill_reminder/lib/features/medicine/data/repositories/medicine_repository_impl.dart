@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:pill_reminder/cores/error/failure.dart';
 import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
@@ -52,7 +50,6 @@ class MedicineRepositoryImpl extends MedicineRepository {
   Future<Either<Failure, List<MedicineEntity>>> getMedicines() async {
     try {
       final List<MedicineModel> result = await localDataSource.getMedicines();
-      log(result.toString());
       return Right(result.map((e) => e.toEntity()).toList());
     } catch (e) {
       if (e is Failure) {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
@@ -33,12 +31,16 @@ class EditMedicinePage extends StatelessWidget {
         final TextEditingController intervalController = TextEditingController(
           text: medicine.interval?.toString() ?? '',
         );
+        final TextEditingController lastTakenController =
+            TextEditingController();
+
         final TextEditingController totalAmountController =
             TextEditingController(text: medicine.medicineAmount.toString());
         final TextEditingController takenAmountController =
             TextEditingController(text: medicine.medicineTaken.toString());
         final List<TimeOfDay> selectedTime = medicine.time ?? [];
         final List<TextEditingController> specificTimeControllers = [];
+        final List<TimeOfDay> lastTakenTime = [TimeOfDay.now()];
 
         // Initialize specific time controllers if medicine uses specific times
         if (medicine.time != null && medicine.time!.isNotEmpty) {
@@ -80,7 +82,7 @@ class EditMedicinePage extends StatelessWidget {
               icon: Icon(Icons.arrow_back_ios_new, color: colors.icon),
             ),
             title: Text(
-              "Edit Medicine",
+              'Edit Medicine',
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colors.text,
@@ -91,15 +93,11 @@ class EditMedicinePage extends StatelessWidget {
           backgroundColor: colors.background,
           body: BlocListener<MedicineBloc, MedicineState>(
             listener: (context, state) {
-              log(state.toString());
               if (state is MedicineErrorState) {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
               } else if (state is MedicineLoadedState) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Medicine Updated")),
-                );
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
               }
@@ -123,44 +121,49 @@ class EditMedicinePage extends StatelessWidget {
                         children: [
                           CustomInput(
                             controller: medicineNameController,
-                            hintText: "Medicine Name",
+                            hintText: 'Medicine Name',
                           ),
 
                           MedicineTime(
                             selectedTime: selectedTime,
                             medicineMode: medicineMode,
+
                             onModeChange: (newMode) {
                               medicineMode = newMode;
                             },
                             intervalController: intervalController,
+                            lastTakenController: lastTakenController,
                             specificTimeCotrollers: specificTimeControllers,
+                            lastTakenTime: lastTakenTime,
                           ),
 
                           CustomInput(
-                            hintText: "Medicine Total Amount",
+                            hintText: 'Medicine Total Amount',
                             controller: totalAmountController,
                           ),
 
                           CustomInput(
                             controller: takenAmountController,
-                            hintText: "Medicine Taken Amount",
+                            hintText: 'Medicine Taken Amount',
                           ),
 
                           ElevatedButton(
-                            onPressed: () {
-                              int? interval;
+                            onPressed: () async {
+                              double? interval;
                               List<TimeOfDay>? specificTime;
 
                               if (medicineMode == MedicineMode.interval) {
                                 if (intervalController.text.isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text("Interval is required"),
+                                      content: Text('Interval is required'),
                                     ),
                                   );
                                   return;
                                 }
-                                interval = int.parse(intervalController.text);
+                                interval = double.parse(
+                                  intervalController.text,
+                                );
                               } else {
                                 specificTime = selectedTime;
                               }
@@ -168,11 +171,12 @@ class EditMedicinePage extends StatelessWidget {
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
-                                builder: (context) {
-                                  return const LoadingPopup();
-                                },
+                                builder: (context) => const LoadingPopup(),
                               );
 
+                              await Future.delayed(const Duration(seconds: 1));
+
+                              // ignore: use_build_context_synchronously
                               BlocProvider.of<MedicineBloc>(context).add(
                                 UpdataeMedicineEvent(
                                   medicineId: medicine.medicineId,
@@ -190,15 +194,19 @@ class EditMedicinePage extends StatelessWidget {
                                 ),
                               );
                             },
+
                             style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(20),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
                               backgroundColor: colors.primaryButton,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             child: Text(
-                              "Update Medicine",
+                              'Update Medicine',
                               style: TextStyle(color: colors.primaryButtonText),
                             ),
                           ),

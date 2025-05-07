@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class MedicineEntity extends Equatable {
   final String medicineId;
   final String name;
-  final int? interval;
+  final double? interval;
   final List<TimeOfDay>? time;
   final DateTime startDate;
   final int medicineAmount;

@@ -24,40 +24,23 @@ class IconsAndInfo extends StatelessWidget {
           decoration: BoxDecoration(
             color: colors.progressBackground,
             boxShadow: [
-              BoxShadow(
-                color: colors.shadow,
-                spreadRadius: 1,
-                blurRadius: 1,
-              ),
+              BoxShadow(color: colors.shadow, spreadRadius: 1, blurRadius: 1),
             ],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icons,
-            color: colors.text,
-            size: 30,
-          ),
+          child: Icon(icons, color: colors.primaryButton, size: 30),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: colors.greyText,
-              ),
-            ),
+            Text(title, style: TextStyle(fontSize: 16, color: colors.greyText)),
             Text(
               info,
               textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 16,
-                color: colors.text,
-              ),
+              style: TextStyle(fontSize: 16, color: colors.text),
             ),
           ],
-        )
+        ),
       ],
     );
   }

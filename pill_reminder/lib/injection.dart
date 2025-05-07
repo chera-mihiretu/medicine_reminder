@@ -176,6 +176,7 @@ void notificationActionHandler(NotificationResponse response) {
           final updatedMedicine = MedicineModel(
             medicineId: medicine.medicineId,
             name: medicine.name,
+            interval: medicine.interval,
             startDate: medicine.startDate,
             medicineAmount: medicine.medicineAmount,
             medicineTaken: medicine.medicineTaken + 1,
@@ -196,6 +197,8 @@ void notificationActionHandler(NotificationResponse response) {
             // Save updated medicine if not completed
             medicineBox.put(medicineId, updatedMedicine);
           }
+
+          locator<ScheduleNotificationUsecase>().execute();
 
           dev.log('Flutter action button pressed: $medicine');
 
