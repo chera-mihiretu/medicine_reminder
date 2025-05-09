@@ -26,7 +26,7 @@ class LoadingPopup extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SpinKitRipple(color: colors.primaryButton, size: 50),
+              SpinKitPulse(color: colors.primaryButton, size: 50),
               const SizedBox(height: 10),
               Text('Loading...', style: TextStyle(color: colors.text)),
             ],

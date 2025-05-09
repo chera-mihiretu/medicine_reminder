@@ -14,7 +14,7 @@ void main() {
   late MedicineRepositoryImpl medicineRepositoryImpl;
   MedicineModel testModelData = MedicineTestData.medicineModel;
   MedicineEntity testEntityData = MedicineTestData.medicineEntity;
-  String testError = "error";
+  String testError = 'error';
 
   setUp(() {
     mockMedicineLocalDataSource = MockMedicineLocalDataSource();
@@ -44,13 +44,13 @@ void main() {
         // arrange
         when(
           mockMedicineLocalDataSource.addMedicine(any),
-        ).thenThrow(CacheFailure(message: 'error'));
+        ).thenThrow(const CacheFailure(message: 'error'));
 
         // act
         final result = await medicineRepositoryImpl.addMedicine(testEntityData);
 
         // assert
-        expect(result, Left(CacheFailure(message: 'error')));
+        expect(result, const Left(CacheFailure(message: 'error')));
         verify(mockMedicineLocalDataSource.addMedicine(any)).called(1);
       },
     );

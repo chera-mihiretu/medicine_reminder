@@ -139,8 +139,8 @@ class MedicineDetail extends StatelessWidget {
                                 Text(
                                   'Progress',
                                   style: TextStyle(
-                                    color: colors.primaryButtonText.withOpacity(
-                                      0.8,
+                                    color: colors.primaryButtonText.withAlpha(
+                                      200,
                                     ),
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,

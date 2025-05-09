@@ -18,15 +18,14 @@ void main() {
 
   final testData = MedicineTestData.medicineEntity;
 
-  final testDataList = [
-    testData,
-  ];
+  final testDataList = [testData];
 
-  const errorTest = "Test Error";
+  const errorTest = 'Test Error';
 
   test('should get all medicines from the repository', () async {
-    when(mockMedicineRepository.getMedicines())
-        .thenAnswer((_) async => Right(testDataList));
+    when(
+      mockMedicineRepository.getMedicines(),
+    ).thenAnswer((_) async => Right(testDataList));
 
     final result = await useCase.execute();
 
@@ -36,8 +35,9 @@ void main() {
   });
 
   test('should return failure when repository fails', () async {
-    when(mockMedicineRepository.getMedicines())
-        .thenAnswer((_) async => const Left(CacheFailure(message: errorTest)));
+    when(
+      mockMedicineRepository.getMedicines(),
+    ).thenAnswer((_) async => const Left(CacheFailure(message: errorTest)));
 
     final result = await useCase.execute();
 

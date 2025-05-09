@@ -33,7 +33,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
             priority: notification.priority.priority,
             fullScreenIntent: notification.fullScreen,
             actions: [
-              AndroidNotificationAction(
+              const AndroidNotificationAction(
                 'take_medicine',
                 'Taken',
                 cancelNotification: true,
@@ -43,7 +43,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
           );
 
       final DarwinNotificationDetails darwinNotificationDetails =
-          DarwinNotificationDetails(
+          const DarwinNotificationDetails(
             categoryIdentifier: 'alarm_category',
             presentAlert: true,
             presentBadge: true,

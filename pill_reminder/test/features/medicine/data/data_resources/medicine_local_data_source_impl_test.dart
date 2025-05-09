@@ -21,7 +21,7 @@ void main() {
     );
   });
 
-  group("Testing all data retrieval and store", () {
+  group('Testing all data retrieval and store', () {
     test('should retrieve and store all test data correctly', () async {
       // arrange
       when(

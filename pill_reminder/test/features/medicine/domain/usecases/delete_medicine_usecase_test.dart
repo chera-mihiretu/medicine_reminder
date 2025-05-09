@@ -18,11 +18,12 @@ void main() {
 
   final testData = MedicineTestData.medicineEntity;
   final medicineId = testData.medicineId;
-  const errorTest = "test Error";
+  const errorTest = 'test Error';
 
   test('should delete medicine from the repository', () async {
-    when(mockMedicineRepository.deleteMedicine(medicineId))
-        .thenAnswer((_) async => const Right(true));
+    when(
+      mockMedicineRepository.deleteMedicine(medicineId),
+    ).thenAnswer((_) async => const Right(true));
 
     final result = await useCase.execute(medicineId);
 
@@ -32,8 +33,9 @@ void main() {
   });
 
   test('should return failure when deletion fails', () async {
-    when(mockMedicineRepository.deleteMedicine(medicineId))
-        .thenAnswer((_) async => const Left(CacheFailure(message: errorTest)));
+    when(
+      mockMedicineRepository.deleteMedicine(medicineId),
+    ).thenAnswer((_) async => const Left(CacheFailure(message: errorTest)));
 
     final result = await useCase.execute(medicineId);
 

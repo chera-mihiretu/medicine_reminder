@@ -8,7 +8,7 @@ void main() {
   final tNotificationModel = NotificationTestData.notificationModel;
   final tNotificationEntity = NotificationTestData.notificationEntity;
 
-  group("Notification model should work properly", () {
+  group('Notification model should work properly', () {
     test('should be a subclass of NotificationEntity', () {
       expect(tNotificationModel, isA<NotificationEntity>());
     });

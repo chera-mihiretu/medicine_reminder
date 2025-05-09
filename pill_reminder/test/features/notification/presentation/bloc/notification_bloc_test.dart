@@ -13,7 +13,7 @@ import '../../../../mock/mock_generator.mocks.dart';
 void main() {
   late NotificationBloc notificationBloc;
   late MockScheduleNotificationUsecase mockScheduleNotificationUsecase;
-  const testError = "Error";
+  const testError = 'Error';
 
   setUpAll(() {
     tz_data.initializeTimeZones();

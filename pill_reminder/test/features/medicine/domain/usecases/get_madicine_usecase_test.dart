@@ -18,11 +18,12 @@ void main() {
 
   final testData = MedicineTestData.medicineEntity;
   final medicineId = testData.medicineId;
-  const errorTest = "Test Error";
+  const errorTest = 'Test Error';
 
   test('should get medicine from the repository', () async {
-    when(mockMedicineRepository.getMedicine(medicineId))
-        .thenAnswer((_) async => Right(testData));
+    when(
+      mockMedicineRepository.getMedicine(medicineId),
+    ).thenAnswer((_) async => Right(testData));
 
     final result = await useCase.execute(medicineId);
 
@@ -31,15 +32,18 @@ void main() {
     verifyNoMoreInteractions(mockMedicineRepository);
   });
 
-  test('should return failure when getting medicine from the repository fails',
-      () async {
-    when(mockMedicineRepository.getMedicine(medicineId))
-        .thenAnswer((_) async => const Left(CacheFailure(message: errorTest)));
+  test(
+    'should return failure when getting medicine from the repository fails',
+    () async {
+      when(
+        mockMedicineRepository.getMedicine(medicineId),
+      ).thenAnswer((_) async => const Left(CacheFailure(message: errorTest)));
 
-    final result = await useCase.execute(medicineId);
+      final result = await useCase.execute(medicineId);
 
-    expect(result, const Left(CacheFailure(message: errorTest)));
-    verify(mockMedicineRepository.getMedicine(medicineId));
-    verifyNoMoreInteractions(mockMedicineRepository);
-  });
+      expect(result, const Left(CacheFailure(message: errorTest)));
+      verify(mockMedicineRepository.getMedicine(medicineId));
+      verifyNoMoreInteractions(mockMedicineRepository);
+    },
+  );
 }

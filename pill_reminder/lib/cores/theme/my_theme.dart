@@ -9,7 +9,7 @@ class MyTheme {
   static const Color cardShadow = Color.fromARGB(255, 159, 159, 159);
 
   // Base colors for dark theme
-  static const String poppin = "Poppins";
+  static const String poppin = 'Poppins';
 
   // Light theme using white/off-white palette
   static ThemeData lightTheme = ThemeData(
@@ -26,18 +26,12 @@ class MyTheme {
         borderRadius: BorderRadius.all(Radius.circular(10)),
         borderSide: BorderSide.none,
       ),
-      hintStyle: TextStyle(
-        color: inputHint,
-      ),
+      hintStyle: TextStyle(color: inputHint),
       contentPadding: EdgeInsets.all(10),
       labelStyle: TextStyle(color: inputText),
     ),
-    iconTheme: const IconThemeData(
-      color: inputText,
-    ),
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: inputText,
-    ),
+    iconTheme: const IconThemeData(color: inputText),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(color: inputText),
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         color: inputText,
@@ -54,10 +48,7 @@ class MyTheme {
         fontFamily: poppin,
         fontWeight: FontWeight.bold,
       ),
-      bodyMedium: TextStyle(
-        fontFamily: poppin,
-        color: inputText,
-      ),
+      bodyMedium: TextStyle(fontFamily: poppin, color: inputText),
     ),
   );
 
@@ -82,9 +73,7 @@ class MyTheme {
       contentPadding: EdgeInsets.all(10),
       labelStyle: TextStyle(color: Colors.white),
     ),
-    iconTheme: const IconThemeData(
-      color: Colors.white,
-    ),
+    iconTheme: const IconThemeData(color: Colors.white),
     textTheme: const TextTheme(
       displayLarge: TextStyle(
         color: Colors.white,
@@ -101,10 +90,7 @@ class MyTheme {
         fontFamily: poppin,
         fontWeight: FontWeight.bold,
       ),
-      bodyMedium: TextStyle(
-        fontFamily: poppin,
-        color: Colors.white,
-      ),
+      bodyMedium: TextStyle(fontFamily: poppin, color: Colors.white),
     ),
   );
 }

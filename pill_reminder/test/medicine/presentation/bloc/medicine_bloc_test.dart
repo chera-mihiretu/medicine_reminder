@@ -25,7 +25,7 @@ void main() {
   late AddMedicineUsecase addMedicineUsecase;
 
   final testData = MedicineTestData.medicineEntity;
-  final errorMessage = "Test error message";
+  final errorMessage = 'Test error message';
 
   setUp(() {
     mockMedicineRepository = MockMedicineRepository();
@@ -49,13 +49,13 @@ void main() {
   });
 
   group('MedicineBloc Tests', () {
-    test("Should have initial state", () {
+    test('Should have initial state', () {
       expect(medicineBloc.state, MedicineInitialState());
     });
 
     group('GetMedicineListEvent Tests', () {
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and loaded states when getting medicine list successfully",
+        'Should emit loading and loaded states when getting medicine list successfully',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -71,7 +71,7 @@ void main() {
       );
 
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and error states when getting medicine list fails",
+        'Should emit loading and error states when getting medicine list fails',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -86,7 +86,7 @@ void main() {
 
     group('GetMedicineEvent Tests', () {
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and loaded states when getting medicine successfully",
+        'Should emit loading and loaded states when getting medicine successfully',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -104,7 +104,7 @@ void main() {
       );
 
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and error states when getting medicine fails",
+        'Should emit loading and error states when getting medicine fails',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -121,7 +121,7 @@ void main() {
 
     group('AddMedicineEvent Tests', () {
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and added states when adding medicine successfully",
+        'Should emit loading and added states when adding medicine successfully',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -144,7 +144,7 @@ void main() {
       );
 
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and error states when adding medicine fails",
+        'Should emit loading and error states when adding medicine fails',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -170,7 +170,7 @@ void main() {
 
     group('UpdateMedicineEvent Tests', () {
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and loaded states when updating medicine successfully",
+        'Should emit loading and loaded states when updating medicine successfully',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -201,7 +201,7 @@ void main() {
       );
 
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and error states when updating medicine fails",
+        'Should emit loading and error states when updating medicine fails',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -228,7 +228,7 @@ void main() {
 
     group('DeleteMedicineEvent Tests', () {
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and loaded states when deleting medicine successfully",
+        'Should emit loading and loaded states when deleting medicine successfully',
         build: () => medicineBloc,
         setUp: () {
           when(
@@ -236,16 +236,16 @@ void main() {
           ).thenAnswer((_) async => const Right(true));
           when(
             mockMedicineRepository.getMedicines(),
-          ).thenAnswer((_) async => Right([]));
+          ).thenAnswer((_) async => const Right([]));
         },
         act:
             (bloc) =>
                 bloc.add(DeleteMedicineEvent(medicineId: testData.medicineId)),
-        expect: () => [MedicineLoadingState(), MedicineLoadedState([])],
+        expect: () => [MedicineLoadingState(), const MedicineLoadedState([])],
       );
 
       blocTest<MedicineBloc, MedicineState>(
-        "Should emit loading and error states when deleting medicine fails",
+        'Should emit loading and error states when deleting medicine fails',
         build: () => medicineBloc,
         setUp: () {
           when(

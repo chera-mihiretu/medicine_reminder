@@ -30,7 +30,7 @@ class MedicineLocalDataSourceImpl extends MedicineLocalDataSource {
     try {
       final medicine = medicineStorage.get(id);
       if (medicine == null) {
-        throw CacheFailure(message: 'Medicine not found');
+        throw const CacheFailure(message: 'Medicine not found');
       }
       return medicine;
     } catch (e) {

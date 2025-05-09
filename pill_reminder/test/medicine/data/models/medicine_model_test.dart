@@ -20,18 +20,18 @@ void main() {
   );
   Map<String, dynamic> testInput = MedicineTestData.medicineJson;
 
-  group("Extending test", () {
-    test("Medicine model is not extending Medicine Entity", () {
+  group('Extending test', () {
+    test('Medicine model is not extending Medicine Entity', () {
       expect(testExpect, isA<MedicineEntity>());
     });
   });
 
-  group("Conversion test", () {
-    test("Medicine model is not converting to json", () {
+  group('Conversion test', () {
+    test('Medicine model is not converting to json', () {
       expect(fromJson.toJson(), testInput);
     });
 
-    test("Medicine model is converting to entity", () {
+    test('Medicine model is converting to entity', () {
       expect(fromJson.toEntity(), isA<MedicineEntity>());
     });
 

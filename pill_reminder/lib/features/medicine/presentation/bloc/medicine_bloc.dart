@@ -26,7 +26,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
   }) : super(MedicineInitialState()) {
     on<GetMedicineListEvent>((event, emit) async {
       emit(MedicineLoadingState());
-
+      await Future.delayed(const Duration(seconds: 2));
       final result = await getAllMedicineUsecase.execute();
       result.fold((failure) => emit(MedicineErrorState(failure.message)), (
         medicines,
@@ -87,7 +87,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
       if (state is MedicineLoadedState) {
         loadedState = state as MedicineLoadedState;
       } else {
-        loadedState = MedicineLoadedState([]);
+        loadedState = const MedicineLoadedState([]);
       }
 
       emit(MedicineLoadingState());

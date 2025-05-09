@@ -24,7 +24,7 @@ void main() {
   late DeleteMedicineUsecase deleteMedicineUsecase;
   late AddMedicineUsecase addMedicineUsecase;
   MedicineEntity testData = MedicineEntity(
-    medicineId: "",
+    medicineId: '',
     name: MedicineTestData.medicineEntity.name,
     interval: MedicineTestData.medicineEntity.interval,
     time: MedicineTestData.medicineEntity.time,
@@ -58,12 +58,12 @@ void main() {
   });
 
   group('MedicineBloc Tests', () {
-    test("Should posses intial state in the first ", () {
+    test('Should posses intial state in the first ', () {
       expect(medicineBloc.state, MedicineInitialState());
     });
 
     blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and list of medicine",
+      'The bloc should show loading and list of medicine',
       build: () => medicineBloc,
       setUp: () {
         when(
@@ -81,7 +81,7 @@ void main() {
     );
 
     blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and medicine details",
+      'The bloc should show loading and medicine details',
       build: () => medicineBloc,
       setUp: () {
         when(
@@ -99,7 +99,7 @@ void main() {
     );
 
     blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and success state when adding medicine",
+      'The bloc should show loading and success state when adding medicine',
       build: () => medicineBloc,
       setUp: () {
         when(
@@ -125,7 +125,7 @@ void main() {
     );
 
     blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and success state when updating medicine",
+      'The bloc should show loading and success state when updating medicine',
       build: () => medicineBloc,
       setUp: () {
         when(
@@ -154,7 +154,7 @@ void main() {
     );
 
     blocTest<MedicineBloc, MedicineState>(
-      "The bloc should show loading and success state when deleting medicine",
+      'The bloc should show loading and success state when deleting medicine',
       build: () => medicineBloc,
       setUp: () {
         when(
