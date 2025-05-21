@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/auth/presentation/pages/sign_up_page.dart';
 import 'dart:async';
 
-import 'package:pill_reminder/features/medicine/presentation/pages/home_page.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+      Navigator.of(context).pushReplacementNamed(SignUpPage.routeName);
     });
   }
 

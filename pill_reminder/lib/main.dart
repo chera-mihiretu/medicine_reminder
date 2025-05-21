@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pill_reminder/cores/theme/color_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/medicine_detail.dart';
@@ -85,6 +86,7 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
             '/': (context) => const SplashScreen(),
+            SignUpPage.routeName: (context) => const SignUpPage(),
             HomePage.routeName: (context) => const HomePage(),
             AddMedicinePage.router: (context) => AddMedicinePage(),
             MedicineDetail.routeName: (context) => const MedicineDetail(),

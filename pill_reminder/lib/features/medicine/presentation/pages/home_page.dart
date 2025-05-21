@@ -5,6 +5,7 @@ import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_event.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/account_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/medicine_list_page.dart';
 import 'package:pill_reminder/permissions.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
-  final List<Widget> pages = [const HomePage(), const AccountPage()];
+  final List<Widget> pages = [const MedicineListPage(), const AccountPage()];
+  final List<String> titles = ['Medicine List', 'Profile'];
   void setTabIndex(index) {
     setState(() {
       selectedIndex = index;
@@ -38,7 +40,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: colors.background,
         title: Text(
-          'Medicine List',
+          titles[selectedIndex],
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 24,
@@ -47,29 +49,35 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: colors.buttonShadow,
-              blurRadius: 20,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(AddMedicinePage.router);
-          },
-          backgroundColor: colors.primaryButton,
-          shape: const CircleBorder(),
-          child: Icon(Icons.add, color: colors.primaryIcon, size: 28),
-        ),
-      ),
+      floatingActionButton:
+          (selectedIndex == 0)
+              ? Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: colors.buttonShadow,
+                      blurRadius: 20,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AddMedicinePage.router);
+                  },
+                  backgroundColor: colors.primaryButton,
+                  shape: const CircleBorder(),
+                  child: Icon(Icons.add, color: colors.primaryIcon, size: 28),
+                ),
+              )
+              : null,
       body: pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: setTabIndex,
+        backgroundColor: colors.background,
+        selectedItemColor: colors.primaryButton,
+        unselectedItemColor: colors.text,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
 

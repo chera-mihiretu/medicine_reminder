@@ -54,6 +54,11 @@ dependencies:
   
   app_settings: ^5.1.1
   permission_handler: ^12.0.0+1
+  flutter_svg: ^2.0.0
+  # fire base bullshit
+  firebase_auth: ^4.11.0
+  google_sign_in: ^6.1.5
+  firebase_core: ^2.24.0
 
 dev_dependencies:
   flutter_test:
