@@ -29,10 +29,10 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.example.yourapp</string>
+            <string>com.example.pill-reminder</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>yourapp</string>
+                <string>pill-reminder</string>
             </array>
         </dict>
     </array>

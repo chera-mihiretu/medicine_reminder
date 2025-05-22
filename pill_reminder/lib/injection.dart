@@ -1,12 +1,20 @@
 import 'dart:developer' as dev;
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pill_reminder/cores/constants/app_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/auth/data/data_source/auth_data_source.dart';
+import 'package:pill_reminder/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:pill_reminder/features/auth/domain/repositories/auth_repository.dart';
+import 'package:pill_reminder/features/auth/domain/usecases/auth_state_usecase.dart';
+import 'package:pill_reminder/features/auth/domain/usecases/sign_in_usecase.dart';
+import 'package:pill_reminder/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:pill_reminder/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pill_reminder/features/medicine/data/data_resources/medicine_local_data_source.dart';
 import 'package:pill_reminder/features/medicine/data/models/medicine_model.dart';
 import 'package:pill_reminder/features/medicine/data/models/time_of_day_adapter.dart';
@@ -52,6 +60,11 @@ Future<void> init() async {
       medicineStorage: locator<Box<MedicineModel>>(),
     ),
   );
+
+  locator.registerLazySingleton<AuthDataSource>(
+    () => AuthDataSourceImpl(firebaseAuth: locator()),
+  );
+
   //! Flutter Local Notifications Plugin Initialization
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -113,6 +126,12 @@ Future<void> init() async {
       medicineLocalDataSource: locator(),
     ),
   );
+  //! Firebase instance
+  locator.registerLazySingleton(() => FirebaseAuth.instance);
+  //! Auth repo registrationo
+  locator.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(authDataSource: locator()),
+  );
 
   //! Usecase Registration
   locator.registerLazySingleton(() => AddMedicineUsecase(locator()));
@@ -123,6 +142,11 @@ Future<void> init() async {
   locator.registerLazySingleton(
     () => ScheduleNotificationUsecase(triggerNotificationRepository: locator()),
   );
+
+  //! auth usecases
+  locator.registerLazySingleton(() => SignInUsecase(locator()));
+  locator.registerLazySingleton(() => AuthStateUsecase(locator()));
+  locator.registerLazySingleton(() => SignOutUsecase(locator()));
 
   //! Backround task
 
@@ -138,6 +162,14 @@ Future<void> init() async {
   );
   locator.registerLazySingleton(
     () => NotificationBloc(scheduleNotificationUsecase: locator()),
+  );
+
+  locator.registerLazySingleton(
+    () => AuthBloc(
+      signInUsecase: locator(),
+      authStateUsecase: locator(),
+      signOutUsecase: locator(),
+    ),
   );
 
   // Add this after all initialization is complete

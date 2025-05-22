@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/auth/domain/usecases/auth_state_usecase.dart';
 import 'package:pill_reminder/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:pill_reminder/features/medicine/presentation/pages/home_page.dart';
+import 'package:pill_reminder/injection.dart';
 import 'dart:async';
 
 import 'package:provider/provider.dart';
@@ -18,8 +21,22 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacementNamed(SignUpPage.routeName);
+
+    Timer(const Duration(seconds: 4), () async {
+      final result = await locator<AuthStateUsecase>().call();
+
+      result.fold(
+        (failure) {
+          Navigator.of(context).pushReplacementNamed(SignUpPage.routeName);
+        },
+        (user) {
+          if (user == null) {
+            Navigator.of(context).pushReplacementNamed(SignUpPage.routeName);
+          } else {
+            Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+          }
+        },
+      );
     });
   }
 

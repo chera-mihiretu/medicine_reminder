@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:pill_reminder/features/auth/presentation/bloc/auth_bloc_events.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_event.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/account_page.dart';
@@ -33,6 +35,7 @@ class _HomePageState extends State<HomePage> {
     MyPermissions.requestNotificationPermissionFirstTime(context);
     BlocProvider.of<MedicineBloc>(context).add(GetMedicineListEvent());
     final colors = Provider.of<ThemeProvider>(context).colors;
+    BlocProvider.of<AuthBloc>(context).add(const AuthCheckEvent());
     return Scaffold(
       backgroundColor: colors.background,
       appBar: AppBar(

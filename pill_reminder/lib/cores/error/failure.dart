@@ -13,9 +13,7 @@ class CacheFailure extends Failure {
   // ignore: overridden_fields
   final String message;
 
-  const CacheFailure({
-    required this.message,
-  }) : super(message);
+  const CacheFailure({required this.message}) : super(message);
 }
 
 class PermissionFailure extends Failure {
@@ -23,4 +21,11 @@ class PermissionFailure extends Failure {
   // ignore: overridden_fields
   final String message;
   const PermissionFailure({required this.message}) : super(message);
+}
+
+class ServerFailure extends Failure {
+  @override
+  // ignore: overridden_fields
+  final String message;
+  const ServerFailure({required this.message}) : super(message);
 }

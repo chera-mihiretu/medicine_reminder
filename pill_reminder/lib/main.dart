@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pill_reminder/cores/theme/color_data.dart';
 import 'package:pill_reminder/cores/theme/theme_provider.dart';
+import 'package:pill_reminder/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:pill_reminder/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:pill_reminder/features/medicine/presentation/bloc/medicine_bloc.dart';
 import 'package:pill_reminder/features/medicine/presentation/pages/add_medicine_page.dart';
@@ -34,7 +36,7 @@ void main() async {
       notificationAppLaunchDetails!.notificationResponse!,
     );
   }
-
+  await Firebase.initializeApp();
   locator<ScheduleNotificationUsecase>().execute();
 
   runApp(
@@ -60,6 +62,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (context) => locator<MedicineBloc>()),
           BlocProvider(create: (context) => locator<NotificationBloc>()),
+          BlocProvider(create: (context) => locator<AuthBloc>()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
